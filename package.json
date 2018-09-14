@@ -1,0 +1,26 @@
+{
+  "name": "qa_admin",
+  "version": "0.0.1",
+  "description": "qa_admin",
+  "main": ".umirc.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "qa_admin"
+  ],
+  "author": "yanxiaodi 929213769@qq.com",
+  "license": "MIT",
+  "dependencies": {
+    "dva": "^2.4.0",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2"
+  },
+  "devDependencies": {
+    "umi": "^2.0.0-0",
+    "umi-plugin-react": "^1.0.0-0"
+  }
+}
