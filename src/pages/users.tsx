@@ -1,5 +1,5 @@
-import router from 'umi/router';
-import styles from './users.css';
+import router from 'umi/router'
+import styles from './users.css'
 import { Button } from 'antd'
 
 export default function () {
@@ -12,8 +12,8 @@ export default function () {
       <Button> 按钮 </Button>
 
       <button onClick={() => {
-        router.goBack();
+        router.goBack()
       }}>go back</button>
     </>
-  );
+  )
 }

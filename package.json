@@ -8,7 +8,9 @@
   },
   "scripts": {
     "start": "cross-env PORT=9000 umi dev",
-    "build": "cross-env umi build"
+    "build": "cross-env umi build",
+    "lint": "tslint -c tslint.json -t verbose 'src/**/*.{ts,tsx}'",
+    "precommit": "npm run lint"
   },
   "keywords": [
     "qa_admin"
@@ -19,9 +21,11 @@
     "axios": "^0.18.0",
     "dva": "^2.4.0",
     "react": "^16.5.1",
-    "react-dom": "^16.5.1"
+    "react-dom": "^16.5.1",
+    "tslint-config-prettier": "^1.15.0"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.0.0",
     "@types/form-urlencoded": "^2.0.0",
     "@types/lodash": "^4.14.116",
     "animate.css": "^3.7.0",
@@ -37,11 +41,13 @@
     "lodash-decorators": "^6.0.0",
     "polished": "^2.0.3",
     "redbox-react": "^1.6.0",
+    "source-map-loader": "^0.2.4",
     "styled-components": "^3.4.6",
     "sweetalert2": "^7.26.28",
     "sweetalert2-react-content": "^1.0.1",
     "tslint": "^5.11.0",
     "tslint-react": "^3.6.0",
+    "typescript": "^3.0.3",
     "umi": "^2.0.3",
     "umi-plugin-react": "^1.0.3",
     "why-did-you-update": "^0.1.1",
