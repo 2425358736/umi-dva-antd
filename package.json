@@ -10,8 +10,13 @@
     "start": "cross-env PORT=9000 umi dev",
     "build": "cross-env umi build",
     "lint": "tslint -c tslint.json -t verbose 'src/**/*.{ts,tsx}'",
-    "precommit": "npm run lint"
+    "precommit": "npm run lint",
+    "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
   },
+  "pre-commit": [
+    "precommit-msg",
+    "lint"
+  ],
   "keywords": [
     "qa_admin"
   ],
@@ -40,6 +45,7 @@
     "lodash": "^4.17.11",
     "lodash-decorators": "^6.0.0",
     "polished": "^2.0.3",
+    "pre-commit": "^1.2.2",
     "redbox-react": "^1.6.0",
     "source-map-loader": "^0.2.4",
     "styled-components": "^3.4.6",

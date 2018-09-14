@@ -1,4 +1,4 @@
-import Link from 'umi/link';
+import Link from 'umi/link'
 import Welcome from 'components/Welcome'
 
 import styles from './index.css'
