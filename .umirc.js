@@ -1,3 +1,10 @@
+/*
+ * @Author: yanxiaodi 929213769@qq.com
+ * @Date: 2018-09-17 11:11:16
+ * @LastEditors: yanxiaodi 929213769@qq.com
+ * @LastEditTime: 2018-09-17 11:11:36
+ * @Description: umi config
+ */
 import { resolve } from 'path'
 
 export default {
