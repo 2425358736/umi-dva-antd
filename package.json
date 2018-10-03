@@ -1,7 +1,7 @@
 {
-  "name": "qa_admin",
+  "name": "admin",
   "version": "0.0.1",
-  "description": "qa_admin",
+  "description": "admin",
   "main": ".umirc.js",
   "directories": {
     "doc": "docs"
