@@ -14,7 +14,6 @@ export default {
       antd: true,
     }],
   ],
-  publicPath: '/static/',
   alias: {
     components: resolve(__dirname, './src/components'),
     services: resolve(__dirname, './src/services'),
