@@ -2,7 +2,7 @@
  * @Author: yanxiaodi 929213769@qq.com
  * @Date: 2018-09-17 11:11:16
  * @LastEditors: yanxiaodi 929213769@qq.com
- * @LastEditTime: 2018-09-17 11:11:36
+ * @LastEditTime: 2018-10-10 00:32:06
  * @Description: umi config
  */
 import { resolve } from 'path'
@@ -24,5 +24,22 @@ export default {
 
   theme: {
     "@primary-color": '#1DA57A',
-  }
+  },
+
+  routes: [
+    {
+      path: '/login',
+      exact: true,
+      component: 'login',
+    },
+    { // 永远在最后进行匹配
+      path: '/',
+      component: '../layouts',
+      Routes: ['./routes/PrivateRoute.js'], // 用于权限权限控制
+      routes: [
+        { path: '/', component: 'index' },
+        { path: '/users', component: 'users' },
+      ],
+    },
+  ],
 }
