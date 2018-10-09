@@ -14,6 +14,7 @@ export default {
       antd: true,
     }],
   ],
+
   alias: {
     components: resolve(__dirname, './src/components'),
     services: resolve(__dirname, './src/services'),
