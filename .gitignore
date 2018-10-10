@@ -6,6 +6,14 @@
 # production
 /dist
 
+
+# idea
+/.idea
+
+# Package Files #
+package-lock.json
+yarn.lock
+
 # misc
 .DS_Store
 npm-debug.log*
