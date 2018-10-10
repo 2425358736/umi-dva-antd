@@ -14,6 +14,14 @@ export default {
       antd: true,
     }],
   ],
+  extraBabelPlugins: [
+    ["import", {
+      libraryName: 'ant-design-pro',
+      libraryDirectory: 'lib',
+      style: true,
+      camel2DashComponentName: false,
+    }]
+  ],
 
   alias: {
     components: resolve(__dirname, './src/components'),
