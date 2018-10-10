@@ -1,12 +1,12 @@
 import React from 'react'
 import withRouter from 'umi/withRouter'
-import dynamic from 'umi/dynamic'
-import { connect } from 'dva'
-import { LocaleProvider, Pagination } from 'antd'
-import get from 'lodash/get'
-
+import { LocaleProvider, Layout, Icon } from 'antd'
+import styles from './index.css'
 import zhCN from 'antd/lib/locale-provider/zh_CN'
 import enUS from 'antd/lib/locale-provider/en_US'
+import MenuList from './MenuList'
+
+const { Header, Sider, Content } = Layout
 
 interface Props {
   message: string,
@@ -14,34 +14,43 @@ interface Props {
   children: React.ReactChildren,
 }
 
-const LazyLoad = dynamic({
-  loader: () => import('./LazyLoad'),
-})
-
-const Layout = (props: any) =>
-  <>
-    <h2>Layouts</h2>
-    <h3>message from global model: {props.message}</h3>
-    <hr />
-
-    <span> 测试 antd 组件 国际化 </span>
-    <Pagination defaultCurrent={1} total={50} showSizeChanger={true} />
-
-    <hr />
-    {props.children}
-  </>
-
-@connect(
-  state => ({
-    message: get(state, 'global.message'),
-    lang: get(state, 'global.lang'),
-  })
-)
 class Root extends React.Component<Props, {}> {
+  state = {
+    collapsed: false,
+  }
+
+  toggle = () => {
+    this.setState({
+      collapsed: !this.state.collapsed,
+    })
+  }
   render() {
     return (
       <LocaleProvider locale={this.props.lang === 'zh_CN' ? zhCN : enUS}>
-        <Layout {...this.props} />
+        <Layout style={{height: '657px'}}>
+          <Sider
+            trigger={null}
+            collapsible={true}
+            collapsed={this.state.collapsed}
+          >
+            <div className={styles.logo} />
+            <MenuList
+              collapsed = {this.state.collapsed}
+            />
+          </Sider>
+          <Layout>
+            <Header style={{ background: '#fff', padding: 0 }}>
+              <Icon
+                className={styles.trigger}
+                type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                onClick={this.toggle}
+              />
+            </Header>
+            <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
+              {this.props.children}
+            </Content>
+          </Layout>
+        </Layout>
       </LocaleProvider>
     )
   }
