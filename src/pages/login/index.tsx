@@ -22,6 +22,8 @@ class LoginPage extends Component {
         values
       )
       console.log(data)
+
+      window.location.href = '/'
     }
   }
   render() {
