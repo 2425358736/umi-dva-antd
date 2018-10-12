@@ -1,6 +1,7 @@
 import React from 'react'
 import { Menu, Icon } from 'antd'
 import Link from 'umi/link'
+
 const { SubMenu } = Menu
 
 class MenuList extends React.Component {
@@ -57,7 +58,7 @@ class MenuList extends React.Component {
                 {
                   name: '子页面',
                   icon: '',
-                  path: '/user/urisdiction',
+                  path: '/user/ziyemian',
                   key: 7,
                   type: 1,
                 },
@@ -68,6 +69,31 @@ class MenuList extends React.Component {
       ]
     }
   }
+  componentDidMount = () => {
+    const list = []
+    const key = []
+    const arr = JSON.parse(JSON.stringify(this.state.menuList))
+    this.lookup(arr, list, key)
+    this.setState({
+      openKeys: list,
+      selectedKeys: key
+    })
+  }
+
+  // 根据连接查询父级目录数组
+  lookup = (arr, list, key) => {
+    arr.forEach((json, i) => {
+      if (json.path === this.state.url) {
+        key.push(json.key.toString())
+      } else if (typeof json.children !== 'undefined' && json.children.length > 0) {
+        list.push(json.key.toString())
+        this.lookup(json.children, list, key)
+      } else if (i === arr.length - 1) {
+        list.splice(list.length - 1, 1)
+      }
+    })
+  }
+
   recursion = (children) => {
     return children.map(menu => {
       if (menu.type === 0) {
