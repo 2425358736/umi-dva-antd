@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Alert, Tooltip, Icon, message } from 'antd'
 import { Login } from 'ant-design-pro'
 const styles = require('./Login.less')
-import { post } from '../../utils/api'
+import { postFormDate } from '../../utils/api'
 
 const { UserName, Password, Submit } = Login
 
@@ -17,13 +17,20 @@ class LoginPage extends Component {
 
   handleSubmit = async (err, values) => {
     if (!err) {
-      const data = await post(
-        '/system/verificationUser',
-        values
+      let json = {}
+      json.username = 'admin'
+      json.password = 'admin'
+      json.grant_type = 'password'
+      json.client_id = 'webApp'
+      json.client_secret = 'webApp'
+
+      const data = await postFormDate(
+        '/api-auth/oauth/token',
+        json
       )
       console.log(data)
 
-      window.location.href = '/'
+      // window.location.href = '/'
     }
   }
   render() {

@@ -43,15 +43,23 @@ export default function request(url, options) {
   const defaultOptions = {
     credentials: 'include',
   }
-  const newOptions = { ...defaultOptions, ...options }
+  let newOptions = { ...defaultOptions, ...options }
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
     if (!(newOptions.body instanceof FormData)) {
-      newOptions.headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json; charset=utf-8',
-        ...newOptions.headers,
+      if (typeof newOptions.body === 'string') {
+        newOptions = {
+          method: newOptions.method,
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded', },
+          body: newOptions.body
+        }
+      } else {
+        newOptions.headers = {
+          Accept: 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
+          ...newOptions.headers,
+        }
+        newOptions.body = JSON.stringify(newOptions.body)
       }
-      newOptions.body = JSON.stringify(newOptions.body)
     } else {
       // newOptions.body is FormData
       newOptions.headers = {

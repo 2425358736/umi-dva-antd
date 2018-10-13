@@ -1,7 +1,7 @@
 import { routerRedux } from 'dva/router'
 import request from '../utils/request'
 
-export const http: string = 'http://127.0.01:9000'
+export const http: string = 'http://47.94.1.251:9200'
 
 const data = {
   'success': true,
@@ -57,5 +57,31 @@ export function post(url, params) {
     ).catch((error) => {
       reject(data)
     })
+  })
+}
+
+export function postFormDate(url, params) {
+  let paramstr = ''
+  for ( let key in params ) {
+    if (key) {
+      paramstr = paramstr + key + '=' + params[key] + '&'
+    }
+  }
+  return new Promise((resolve, reject) => {
+    request(http + url, {
+      method: 'POST',
+      body: paramstr,
+    })
+      .then(response => {
+        const resultData = response
+        if (typeof resultData !== 'undefined') {
+          resolve(resultData)
+        } else {
+          resolve(resultData)
+        }
+      })
+      .catch(error => {
+        reject(error)
+      })
   })
 }

@@ -57,6 +57,7 @@ class SysUser extends React.Component {
   getContractInfo = (json) => {
     // console.log(json);
     if (json.type === 'submit' && this.state.id === 0) {
+      // noinspection TypeScriptUnresolvedVariable
       const filters = JSON.parse(JSON.stringify(this.state.params.filters))
       for (const key in filters) {
         if (filters[key] !== null) {
