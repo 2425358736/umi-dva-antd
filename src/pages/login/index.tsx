@@ -17,20 +17,18 @@ class LoginPage extends Component {
 
   handleSubmit = async (err, values) => {
     if (!err) {
-      let json = {}
-      json.username = 'admin'
-      json.password = 'admin'
-      json.grant_type = 'password'
-      json.client_id = 'webApp'
-      json.client_secret = 'webApp'
+      values.grant_type = 'password'
+      values.client_id = 'webApp'
+      values.client_secret = 'webApp'
 
       const data = await postFormDate(
         '/api-auth/oauth/token',
-        json
+        values
       )
-      console.log(data)
+      const Authorization = data.access_token
+      localStorage.setItem('Authorization', Authorization)
 
-      // window.location.href = '/'
+      window.location.href = '/'
     }
   }
   render() {
@@ -48,14 +46,14 @@ class LoginPage extends Component {
             <UserName
               prefix={<Icon type="user" style={{ color: 'rgba(0, 0, 0, .25)', fontSize: '20px' }} />}
               className={styles.inputDom}
-              name="phone"
-              placeholder="请输入手机号"
+              name="username"
+              placeholder="请输入用户名"
             />
             <Password
               prefix={<Icon type="lock"
                             style={{ color: 'rgba(0, 0, 0, .25)', fontSize: '20px' }} />}
               className={styles.inputDom}
-              name="passWord"
+              name="password"
               placeholder="请输入密码"
             />
           </div>

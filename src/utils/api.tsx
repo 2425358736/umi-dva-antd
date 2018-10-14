@@ -47,6 +47,9 @@ export function post(url, params) {
       body: {
         ...params,
       },
+      headers: {
+        Authorization: localStorage.getItem('Authorization')
+      }
     }).then(
       (response) => {
         const resultData = response
