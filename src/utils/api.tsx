@@ -40,6 +40,26 @@ const data = {
   'total': null
 }
 
+export function get(url, params) {
+  return new Promise((resolve, reject) => {
+    request(http + url, {
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('Authorization')
+      }
+    }).then(
+      (response) => {
+        const resultData = response
+        resolve(resultData)
+        // resolve(data)
+
+      }
+    ).catch((error) => {
+      reject(error)
+    })
+  })
+}
+
 export function post(url, params) {
   return new Promise((resolve, reject) => {
     request(http + url, {
@@ -48,17 +68,17 @@ export function post(url, params) {
         ...params,
       },
       headers: {
-        Authorization: localStorage.getItem('Authorization')
+        Authorization: 'Bearer ' + localStorage.getItem('Authorization')
       }
     }).then(
       (response) => {
         const resultData = response
-        // resolve(resultData)
-        resolve(data)
+        resolve(resultData)
+        // resolve(data)
 
       }
     ).catch((error) => {
-      reject(data)
+      reject(error)
     })
   })
 }
@@ -69,6 +89,9 @@ export function postFormDate(url, params) {
     if (key) {
       paramstr = paramstr + key + '=' + params[key] + '&'
     }
+  }
+  if (paramstr !== '') {
+    paramstr = paramstr.substr(0, paramstr.length - 1)
   }
   return new Promise((resolve, reject) => {
     request(http + url, {

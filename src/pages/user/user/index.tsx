@@ -1,7 +1,7 @@
 // 用户列表
 import React from 'react'
 import { message, Table, Input, Button, Icon, Menu, Popconfirm, Dropdown, Modal } from 'antd'
-import { post } from '../../../utils/api'
+import { post, get } from '../../../utils/api'
 import Screen from '../../../components/Screen/Screen'
 import UserAddUpComponent from './components/UserAddUp'
 const styles = require('./user.less')
@@ -84,22 +84,22 @@ class SysUser extends React.Component {
     that.setState({
       columns: [
         {
-          title: '所属部门',
-          width: 150,
-          dataIndex: 'departmentName',
-        },
-        {
           title: '用户名',
           width: 150,
-          dataIndex: 'userName',
+          dataIndex: 'username',
         },
         {
-          title: '所属角色',
-          width: 150,
-          dataIndex: 'roleId',
-          render(text, record) {
-            return (record.roleName)
+          title: '性别',
+          width: 100,
+          dataIndex: 'sex',
+          render(text) {
+            return text === 0 ? '男' : '女'
           },
+        },
+        {
+          title: '昵称',
+          width: 150,
+          dataIndex: 'nickname',
         },
         {
           title: '手机',
@@ -107,34 +107,25 @@ class SysUser extends React.Component {
           dataIndex: 'phone',
         },
         {
-          title: '账号状态',
-          width: 200,
-          column: 'loginFlag',
-          columnStr: {0: '正常', 1: '关闭'},
-          dataIndex: 'loginFlag',
-          filters: [{
-            text: '正常',
-            value: 0,
-          }, {
-            text: '关闭',
-            value: 1,
-          }],
-          filteredValue: that.state.params.filters.loginFlag || null,
-          sorter: true,
+          title: '头像',
+          width: 150,
+          dataIndex: 'headImgUrl',
           render(text) {
-            return text === 0 ? '正常' : '关闭'
+            return <img src={text} height="100" width="100" />
           },
         },
         {
           title: '创建时间',
           width: 150,
-          dataIndex: 'loginDate',
-          sorter: true,
+          dataIndex: 'createTime',
         },
         {
-          title: '备注',
-          width: 200,
-          dataIndex: 'remark',
+          title: '是否启用',
+          width: 150,
+          dataIndex: 'enabled',
+          render(text) {
+            return text ? '启用' : '停用'
+          },
         },
         {
           title: '操作',
@@ -144,9 +135,6 @@ class SysUser extends React.Component {
             return (
               <div>
                 <a onClick={() => that.edit(record.id)}>编辑</a>
-                <Popconfirm title="此操作将重置密码为cj123456，是否继续?" onConfirm={() => that.reset(record.id)}>
-                  <a style={{marginLeft: '20px'}}>重置密码</a>
-                </Popconfirm>
                 <Popconfirm title="是否确认关闭该账号？" onConfirm={() => that.close(record.id)}>
                   <a style={{marginLeft: '20px'}}>关闭账号</a>
                 </Popconfirm>
@@ -252,12 +240,12 @@ class SysUser extends React.Component {
       paramsOne.pagination.pageSize = 15
     }
     this.setState({ loading: true })
-    const data = await post('/user/userList', paramsOne)
+    const data = await get('/api-user/users?page=0&limit=15', paramsOne)
     const paginationOne = this.state.pagination
     paginationOne.total = data.data.total
     this.setState({
       loading: false,
-      dataSource: data.data.list,
+      dataSource: data.data,
       pagination: paginationOne,
     })
   }
@@ -296,13 +284,13 @@ class SysUser extends React.Component {
     return (
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
         <div>
-          <Input prefix={<Icon type="search" />}
-                 placeholder="搜索用户名"
-                 style={{ width: 280, marginLeft: '10px' }}
-                 value={this.state.screenItem.userName}
-                 onChange={this.onChangeCustomerName}
-                 onPressEnter={this.handleSearch} />
-          <Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>搜索</Button>
+          {/*<Input prefix={<Icon type="search" />}*/}
+                 {/*placeholder="搜索用户名"*/}
+                 {/*style={{ width: 280, marginLeft: '10px' }}*/}
+                 {/*value={this.state.screenItem.userName}*/}
+                 {/*onChange={this.onChangeCustomerName}*/}
+                 {/*onPressEnter={this.handleSearch} />*/}
+          {/*<Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>搜索</Button>*/}
           <Modal
             title={this.state.id > 0 ? '编辑账号' : '添加账号'}
             style={{ top: 20 }}
