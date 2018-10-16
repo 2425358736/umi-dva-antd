@@ -3,44 +3,7 @@ import request from '../utils/request'
 
 export const http: string = 'http://47.94.1.251:9200'
 
-const data = {
-  'success': true,
-  'code': 0,
-  'message': '数据获取成功',
-  'msg': null,
-  'data': {
-    'total': 14,
-    'list': [
-      {
-        'id': 204,
-        'userName': 'rina',
-        'phone': '13854233396',
-        'loginDate': '2018-09-29',
-        'loginFlag': 1,
-        'remark': '备注数据',
-        'delFlag': 0,
-        'departmentName': '测试部',
-        'roleName': '测试',
-        'loginFlag': 0,
-      },
-      {
-        'id': 205,
-        'userName': '测试2',
-        'phone': '123464343',
-        'loginDate': '2018-09-30',
-        'loginFlag': 1,
-        'remark': '备注数据',
-        'delFlag': 0,
-        'departmentName': '测试部',
-        'roleName': '测试',
-        'loginFlag': 1,
-      }
-    ]
-  },
-  'total': null
-}
-
-export function get(url, params) {
+export function getRequest(url) {
   return new Promise((resolve, reject) => {
     request(http + url, {
       method: 'GET',
@@ -60,7 +23,7 @@ export function get(url, params) {
   })
 }
 
-export function post(url, params) {
+export function postRequest(url, params) {
   return new Promise((resolve, reject) => {
     request(http + url, {
       method: 'POST',
@@ -74,8 +37,6 @@ export function post(url, params) {
       (response) => {
         const resultData = response
         resolve(resultData)
-        // resolve(data)
-
       }
     ).catch((error) => {
       reject(error)
@@ -83,7 +44,28 @@ export function post(url, params) {
   })
 }
 
-export function postFormDate(url, params) {
+export function deleteRequest(url, params) {
+  return new Promise((resolve, reject) => {
+    request(http + url, {
+      method: 'delete',
+      body: {
+        ...params,
+      },
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('Authorization')
+      }
+    }).then(
+      (response) => {
+        const resultData = response
+        resolve(resultData)
+      }
+    ).catch((error) => {
+      reject(error)
+    })
+  })
+}
+
+export function postFormDateRequest(url, params) {
   let paramstr = ''
   for ( let key in params ) {
     if (key) {

@@ -47,7 +47,6 @@ export default {
       routes: [
         { path: '/', component: 'index' },
         { path: '/users', component: 'users' },
-        { path: '/user/department', component: 'user/department' },
         { path: '/user/role', component: 'user/role' },
         { path: '/user/user', component: 'user/user' },
         { path: '/user/urisdiction', component: 'user/urisdiction' },

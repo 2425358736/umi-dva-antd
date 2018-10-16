@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Alert, Tooltip, Icon, message } from 'antd'
 import { Login } from 'ant-design-pro'
 const styles = require('./Login.less')
-import { postFormDate } from '../../utils/api'
+import { postFormDateRequest } from '../../utils/api'
 
 const { UserName, Password, Submit } = Login
 
@@ -21,7 +21,7 @@ class LoginPage extends Component {
       values.client_id = 'webApp'
       values.client_secret = 'webApp'
 
-      const data = await postFormDate(
+      const data = await postFormDateRequest(
         '/api-auth/oauth/token',
         values
       )

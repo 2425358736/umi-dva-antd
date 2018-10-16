@@ -1,36 +1,61 @@
-// 用户列表
+// 列表
 import React from 'react'
-import { message, Table, Input, Button, Icon, Menu, Popconfirm, Dropdown, Modal } from 'antd'
-import { post, get } from '../../../utils/api'
+import { message, Table, Input, Button, Popconfirm, Modal, Icon } from 'antd'
+import { getRequest, deleteRequest } from '../../../utils/api'
 import Screen from '../../../components/Screen/Screen'
-import UserAddUpComponent from './components/UserAddUp'
-const styles = require('./user.less')
+import AddUp from './components/AddUp'
+const styles = require('./index.less')
 
-class SysUser extends React.Component {
+class Index extends React.Component {
   constructor(props) {
     super(props)
+    /**
+     *
+     * @type
+     * {
+     *  {
+     *    record: {};  当前变更的对象
+     *    columns: Array;  列表头部配置
+     *    dataSource: Array;  数据源
+     *    pagination: {  分页组件参数
+     *      showSizeChanger: boolean; 是否可以改变 pageSize
+     *      showQuickJumper: boolean; 是否可以快速跳转至某页
+     *      pageSizeOptions: [string , string , string , string]; 指定每页可以显示多少条
+     *      defaultPageSize: number 默认的每页条数
+     *    };
+     *    params: { 后端交互参数集合
+     *      pagination: {}; 分页参数
+     *      filters: {}; 查询参数
+     *      sorter: {} 排序参数
+     *    };
+     *    screenItem: {}; 搜索框参数
+     *    loading: boolean; 加载等待
+     *    open: boolean Modal打开组件
+     *   }
+     * }
+     */
     this.state = {
+      record: {},
       columns: [],
       dataSource: [],
       pagination: {
         showSizeChanger: true,
         showQuickJumper: true,
-        pageSizeOptions: ['15', '30', '45'],
-        defaultPageSize: 15,
+        pageSizeOptions: ['10', '15', '30', '45'],
+        defaultPageSize: 10,
       },
       params: {
         pagination: {},
         filters: {
-          userName: '',
+          username: '',
         },
         sorter: {},
       },
       screenItem: {
-        userName: '',
+        username: '',
       },
       loading: false,
       open: false,
-      id: 0,
     }
   }
   componentDidMount = async () => {
@@ -39,12 +64,12 @@ class SysUser extends React.Component {
   }
 
   /**
-   * 更新客户姓名
+   * 更新搜索框
    * @param e
    */
   onChangeCustomerName = (e) => {
     const screenItemOne = this.state.screenItem
-    screenItemOne.userName = e.target.value
+    screenItemOne.username = e.target.value
     this.setState({
       screenItem: screenItemOne,
     })
@@ -55,9 +80,7 @@ class SysUser extends React.Component {
    * @param json
    */
   getContractInfo = (json) => {
-    // console.log(json);
-    if (json.type === 'submit' && this.state.id === 0) {
-      // noinspection TypeScriptUnresolvedVariable
+    if (json.type === 'submit' && !this.state.record.id) {
       const filters = JSON.parse(JSON.stringify(this.state.params.filters))
       for (const key in filters) {
         if (filters[key] !== null) {
@@ -66,13 +89,13 @@ class SysUser extends React.Component {
       }
       this.handleTableChange({},
                              filters, {})
-    } else if (json.type === 'submit' && this.state.id > 0) {
+    } else if (json.type === 'submit' && this.state.record.id > 0) {
       this.handleTableChange(this.state.params.pagination,
                              this.state.params.filters, this.state.params.sorter)
     }
     this.setState({
       open: false,
-      id: 0,
+      record: {},
     })
   }
   /**
@@ -134,11 +157,8 @@ class SysUser extends React.Component {
           render(text, record) {
             return (
               <div>
-                <a onClick={() => that.edit(record.id)}>编辑</a>
-                <Popconfirm title="是否确认关闭该账号？" onConfirm={() => that.close(record.id)}>
-                  <a style={{marginLeft: '20px'}}>关闭账号</a>
-                </Popconfirm>
-                <Popconfirm title="确定删除吗?" onConfirm={() => that.deleteDepartment(record.id)}>
+                <a onClick={() => that.edit(record)}>编辑</a>
+                <Popconfirm title="确定删除吗?" onConfirm={() => that.delete(record.id)}>
                   <a style={{marginLeft: '20px'}}>删除</a>
                 </Popconfirm>
               </div>
@@ -148,47 +168,28 @@ class SysUser extends React.Component {
       ],
     })
   }
-  edit = async (id) => {
+  /**
+   * 编辑
+   * @param record 编辑的对象
+   * @returns {Promise<void>}
+   */
+  edit = async (record) => {
     this.setState({
       open: true,
-      id,
+      record,
     })
   }
-  reset = async (id) => {
-    const data = await post(
-      '/system/updateUser',
-      { id,
-        passWord: 'lzq123456' },
-    )
-    await this.setState({
-      id,
-    })
-    this.getContractInfo({type: 'submit'})
-    message.success(data.message)
+  /**
+   * @param id 删除的id
+   * @returns {Promise<void>}
+   */
+  delete = async (id) => {
+    // const data = await deleteRequest('/api-user/users/' + id)
+    // this.getContractInfo({type: 'submit'})
+    // message.success(data.resp_msg)
+    message.success('没有删除接口')
   }
-  close = async (id) => {
-    const data = await post(
-      '/system/updateUser',
-      { id,
-        loginFlag: 2 }
-    )
-    await this.setState({
-      id,
-    })
-    this.getContractInfo({type: 'submit'})
-    message.success(data.message)
-  }
-  deleteDepartment = async (id) => {
-    const data = await post(
-      '/system/deleteSysUser',
-      { id },
-    )
-    await this.setState({
-      id,
-    })
-    this.getContractInfo({type: 'submit'})
-    message.success(data.message)
-  }
+
   /**
    * 点击搜索执行 跳转第一页
    */
@@ -205,7 +206,6 @@ class SysUser extends React.Component {
    * @param sorter
    */
   handleTableChange = (pagination, filters, sorter) => {
-    debugger
     const pager = { ...this.state.pagination }
     pager.current = pagination.current
     const params = {
@@ -240,9 +240,10 @@ class SysUser extends React.Component {
       paramsOne.pagination.pageSize = 15
     }
     this.setState({ loading: true })
-    const data = await get('/api-user/users?page=0&limit=15', paramsOne)
+    const data = await getRequest('/api-user/users?page='
+      + paramsOne.pagination.current + '&limit=' + paramsOne.pagination.pageSize)
     const paginationOne = this.state.pagination
-    paginationOne.total = data.data.total
+    paginationOne.total = data.count
     this.setState({
       loading: false,
       dataSource: data.data,
@@ -276,7 +277,6 @@ class SysUser extends React.Component {
   addCustomer = () => {
     this.setState({
       open: true,
-      id: 0,
     })
   }
   render() {
@@ -284,15 +284,16 @@ class SysUser extends React.Component {
     return (
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
         <div>
-          {/*<Input prefix={<Icon type="search" />}*/}
-                 {/*placeholder="搜索用户名"*/}
-                 {/*style={{ width: 280, marginLeft: '10px' }}*/}
-                 {/*value={this.state.screenItem.userName}*/}
-                 {/*onChange={this.onChangeCustomerName}*/}
-                 {/*onPressEnter={this.handleSearch} />*/}
-          {/*<Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>搜索</Button>*/}
+          <Input prefix={<Icon type="search" />}
+                 placeholder="搜索用户名"
+                 style={{ width: 280, marginLeft: '10px' }}
+                 value={this.state.screenItem.username}
+                 onChange={this.onChangeCustomerName}
+                 onPressEnter={this.handleSearch}
+          />
+          <Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>搜索</Button>
           <Modal
-            title={this.state.id > 0 ? '编辑账号' : '添加账号'}
+            title={this.state.record.id > 0 ? '编辑用户' : '添加用户'}
             style={{ top: 20 }}
             width={500}
             visible={this.state.open}
@@ -300,14 +301,13 @@ class SysUser extends React.Component {
             onCancel={() => this.getContractInfo({ type: 'cancel' })}
             destroyOnClose={true}
           >
-            <UserAddUpComponent
+            <AddUp
               callback={this.getContractInfo}
-              id={this.state.id}
-              department={[]}
+              record={this.state.record}
             />
           </Modal>
           <div style={{ float: 'right', display: 'inline-block', cursor: 'pointer' }} onClick={this.addCustomer}>
-            <Button type="primary" style={{padding: '0 15px'}}>+ 添加账号</Button>
+            <Button type="primary" style={{padding: '0 15px'}}>+ 添加用户</Button>
           </div>
         </div>
         <Screen
@@ -329,4 +329,4 @@ class SysUser extends React.Component {
   }
 }
 
-export default SysUser
+export default Index

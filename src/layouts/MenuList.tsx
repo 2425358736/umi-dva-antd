@@ -1,5 +1,6 @@
 import React from 'react'
 import { Menu, Icon } from 'antd'
+import MenuJson from './MenuJson'
 import Link from 'umi/link'
 
 const { SubMenu } = Menu
@@ -12,61 +13,7 @@ class MenuList extends React.Component {
       openKeys: [],
       selectedKeys: [],
       url: url,
-      menuList: [
-        {
-          name: '系统设置',
-          icon: 'setting',
-          path: '',
-          key: 1,
-          type: 0,
-          children: [
-            {
-              name: '部门管理',
-              icon: '',
-              path: '/user/department',
-              key: 2,
-              type: 1,
-            },
-            {
-              name: '角色管理',
-              icon: '',
-              path: '/user/role',
-              key: 3,
-              type: 1,
-            },
-            {
-              name: '用户管理',
-              icon: '',
-              path: '/user/user',
-              key: 4,
-              type: 1,
-            },
-            {
-              name: '权限管理',
-              icon: '',
-              path: '/user/urisdiction',
-              key: 5,
-              type: 1,
-            },
-            {
-              name: '父菜单',
-              icon: 'setting',
-              path: '',
-              key: 6,
-              type: 0,
-              children: [
-                {
-                  name: '子页面',
-                  icon: '',
-                  path: '/user/ziyemian',
-                  key: 7,
-                  type: 1,
-                },
-              ]
-            },
-          ]
-        }
-      ]
+      menuList: MenuJson
     }
   }
   componentDidMount = () => {
@@ -83,10 +30,10 @@ class MenuList extends React.Component {
   // 根据连接查询父级目录数组
   lookup = (arr, list, key) => {
     arr.forEach((json, i) => {
+      list.push(json.key.toString())
       if (json.path === this.state.url) {
         key.push(json.key.toString())
       } else if (typeof json.children !== 'undefined' && json.children.length > 0) {
-        list.push(json.key.toString())
         this.lookup(json.children, list, key)
       } else if (i === arr.length - 1) {
         list.splice(list.length - 1, 1)
