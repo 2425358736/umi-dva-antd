@@ -17,10 +17,13 @@ class MenuList extends React.Component {
     }
   }
   componentDidMount = () => {
-    const list = []
+    let list = []
     const key = []
     const arr = JSON.parse(JSON.stringify(this.state.menuList))
     this.lookup(arr, list, key)
+    if (key.length === 0) {
+      list = []
+    }
     this.setState({
       openKeys: list,
       selectedKeys: key
