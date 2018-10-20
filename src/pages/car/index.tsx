@@ -245,7 +245,7 @@ class Index extends React.Component {
       paramsOne.pagination.pageSize = 15
     }
     this.setState({ loading: true })
-    const data = await getRequest('/api-biz/vehicle/list?page='
+    const data = await getRequest('/api-user/users?page='
       + paramsOne.pagination.current + '&limit=' + paramsOne.pagination.pageSize)
     const paginationOne = this.state.pagination
     paginationOne.total = data.count
@@ -298,7 +298,7 @@ class Index extends React.Component {
           />
           <Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>搜索</Button>
           <Modal
-            title={this.state.record.id > 0 ? '编辑用户' : '添加用户'}
+            title={this.state.record.id > 0 ? '编辑车辆' : '添加车辆'}
             style={{ top: 20 }}
             width={500}
             visible={this.state.open}
@@ -312,7 +312,7 @@ class Index extends React.Component {
             />
           </Modal>
           <div style={{ float: 'right', display: 'inline-block', cursor: 'pointer' }} onClick={this.addCustomer}>
-            <Button type="primary" style={{padding: '0 15px'}}>+ 添加用户</Button>
+            <Button type="primary" style={{padding: '0 15px'}}>+ 添加车辆</Button>
           </div>
         </div>
         <Screen

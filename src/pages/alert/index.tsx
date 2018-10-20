@@ -289,7 +289,7 @@ class Index extends React.Component {
           />
           <Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>搜索</Button>
           <Modal
-            title={this.state.record.id > 0 ? '编辑用户' : '添加用户'}
+            title={this.state.record.id > 0 ? '编辑违章' : '添加违章'}
             style={{ top: 20 }}
             width={500}
             visible={this.state.open}
@@ -303,7 +303,7 @@ class Index extends React.Component {
             />
           </Modal>
           <div style={{ float: 'right', display: 'inline-block', cursor: 'pointer' }} onClick={this.addCustomer}>
-            <Button type="primary" style={{padding: '0 15px'}}>+ 添加用户</Button>
+            <Button type="primary" style={{padding: '0 15px'}}>+ 添加违章</Button>
           </div>
         </div>
         <Screen

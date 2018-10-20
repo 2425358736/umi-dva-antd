@@ -264,7 +264,7 @@ class Index extends React.Component {
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
         <div>
           <Input prefix={<Icon type="search" />}
-                 placeholder="搜索用户名"
+                 placeholder="搜索结算名"
                  style={{ width: 280, marginLeft: '10px' }}
                  value={this.state.screenItem.username}
                  onChange={this.onChangeCustomerName}

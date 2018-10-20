@@ -90,22 +90,6 @@ const MenuJson = [
         key: 5,
         type: 1,
       },
-      {
-        name: '二级目录',
-        icon: 'pic-center',
-        path: '',
-        key: 6,
-        type: 0,
-        children: [
-          {
-            name: '二级页面',
-            icon: '',
-            path: '/users',
-            key: 14,
-            type: 1,
-          }
-      ]
-      },
     ]
   }
 ]

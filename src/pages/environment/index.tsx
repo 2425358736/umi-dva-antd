@@ -269,7 +269,7 @@ class Index extends React.Component {
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
         <div>
           <Input prefix={<Icon type="search" />}
-                 placeholder="搜索用户名"
+                 placeholder="搜索站点名"
                  style={{ width: 280, marginLeft: '10px' }}
                  value={this.state.screenItem.username}
                  onChange={this.onChangeCustomerName}
@@ -277,7 +277,7 @@ class Index extends React.Component {
           />
           <Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>搜索</Button>
           <Modal
-            title={this.state.record.id > 0 ? '编辑用户' : '添加用户'}
+            title={this.state.record.id > 0 ? '编辑站点' : '添加站点'}
             style={{ top: 20 }}
             width={500}
             visible={this.state.open}
@@ -291,7 +291,7 @@ class Index extends React.Component {
             />
           </Modal>
           <div style={{ float: 'right', display: 'inline-block', cursor: 'pointer' }} onClick={this.addCustomer}>
-            <Button type="primary" style={{padding: '0 15px'}}>+ 添加用户</Button>
+            <Button type="primary" style={{padding: '0 15px'}}>+ 添加站点</Button>
           </div>
         </div>
         <Screen
