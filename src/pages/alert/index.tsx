@@ -1,10 +1,9 @@
 // 列表
 import React from 'react'
 import { message, Table, Input, Button, Popconfirm, Modal, Icon } from 'antd'
-import { getRequest, deleteRequest } from '../../../utils/api'
-import Screen from '../../../components/Screen/Screen'
+import { getRequest, deleteRequest } from '../../utils/api'
+import Screen from '../../components/Screen/Screen'
 import AddUp from './components/AddUp'
-import SetPermissions from './components/SetPermissions'
 const styles = require('./index.less')
 
 class Index extends React.Component {
@@ -31,8 +30,7 @@ class Index extends React.Component {
      *    };
      *    screenItem: {}; 搜索框参数
      *    loading: boolean; 加载等待
-     *    open: boolean 添加编辑Modal打开组件
-     *    openPermissions: boolean 设置权限Modal打开组件
+     *    open: boolean Modal打开组件
      *   }
      * }
      */
@@ -49,16 +47,15 @@ class Index extends React.Component {
       params: {
         pagination: {},
         filters: {
-          name: '',
+          username: '',
         },
         sorter: {},
       },
       screenItem: {
-        name: '',
+        username: '',
       },
       loading: false,
       open: false,
-      openPermissions: false,
     }
   }
   componentDidMount = async () => {
@@ -72,7 +69,7 @@ class Index extends React.Component {
    */
   onChangeCustomerName = (e) => {
     const screenItemOne = this.state.screenItem
-    screenItemOne.name = e.target.value
+    screenItemOne.username = e.target.value
     this.setState({
       screenItem: screenItemOne,
     })
@@ -98,7 +95,6 @@ class Index extends React.Component {
     }
     this.setState({
       open: false,
-      openPermissions: false,
       record: {},
     })
   }
@@ -111,23 +107,48 @@ class Index extends React.Component {
     that.setState({
       columns: [
         {
-          title: '角色名',
-          width: 200,
-          dataIndex: 'name',
+          title: '识别码',
+          width: 150,
+          dataIndex: 'username',
         },
         {
-          title: 'code',
-          width: 200,
-          dataIndex: 'code',
+          title: '时间',
+          width: 100,
+          dataIndex: 'sex',
         },
         {
-          title: '创建时间',
-          width: 200,
+          title: '车牌号',
+          width: 150,
+          dataIndex: 'nickname',
+        },
+        {
+          title: '用户',
+          width: 150,
+          dataIndex: 'phone',
+        },
+        {
+          title: '违章地点',
+          width: 150,
+          dataIndex: 'ddd',
+        },
+        {
+          title: '监控编号',
+          width: 150,
           dataIndex: 'createTime',
         },
         {
+          title: '罚款金额',
+          width: 150,
+          dataIndex: 'enabled',
+        },
+        {
+          title: '违章积分',
+          width: 150,
+          dataIndex: 'enadddbled',
+        },
+        {
           title: '操作',
-          width: 200,
+          width: 350,
           dataIndex: 'opt',
           render(text, record) {
             return (
@@ -136,7 +157,6 @@ class Index extends React.Component {
                 <Popconfirm title="确定删除吗?" onConfirm={() => that.delete(record.id)}>
                   <a style={{marginLeft: '20px'}}>删除</a>
                 </Popconfirm>
-                <a style={{marginLeft: '20px'}} onClick={() => that.setPermissions(record)}>设置权限</a>
               </div>
             )
           },
@@ -149,15 +169,9 @@ class Index extends React.Component {
    * @param record 编辑的对象
    * @returns {Promise<void>}
    */
-  edit = (record) => {
+  edit = async (record) => {
     this.setState({
       open: true,
-      record,
-    })
-  }
-  setPermissions = (record) => {
-    this.setState({
-      openPermissions: true,
       record,
     })
   }
@@ -166,9 +180,10 @@ class Index extends React.Component {
    * @returns {Promise<void>}
    */
   delete = async (id) => {
-    const data = await deleteRequest('/api-user/roles/' + id)
-    this.getContractInfo({type: 'submit'})
-    message.success(data.resp_msg)
+    // const data = await deleteRequest('/api-user/users/' + id)
+    // this.getContractInfo({type: 'submit'})
+    // message.success(data.resp_msg)
+    message.success('没有删除接口')
   }
 
   /**
@@ -221,7 +236,7 @@ class Index extends React.Component {
       paramsOne.pagination.pageSize = 15
     }
     this.setState({ loading: true })
-    const data = await getRequest('/api-user/roles?page='
+    const data = await getRequest('/api-biz/violation/list='
       + paramsOne.pagination.current + '&limit=' + paramsOne.pagination.pageSize)
     const paginationOne = this.state.pagination
     paginationOne.total = data.count
@@ -266,15 +281,15 @@ class Index extends React.Component {
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
         <div>
           <Input prefix={<Icon type="search" />}
-                 placeholder="搜索角色名"
+                 placeholder="搜索用户名"
                  style={{ width: 280, marginLeft: '10px' }}
-                 value={this.state.screenItem.name}
+                 value={this.state.screenItem.username}
                  onChange={this.onChangeCustomerName}
                  onPressEnter={this.handleSearch}
           />
           <Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>搜索</Button>
           <Modal
-            title={this.state.record.id > 0 ? '编辑角色' : '添加角色'}
+            title={this.state.record.id > 0 ? '编辑用户' : '添加用户'}
             style={{ top: 20 }}
             width={500}
             visible={this.state.open}
@@ -287,21 +302,8 @@ class Index extends React.Component {
               record={this.state.record}
             />
           </Modal>
-          <Modal
-            title="设置权限"
-            style={{ top: 20 }}
-            width={500}
-            visible={this.state.openPermissions}
-            footer={null}
-            onCancel={() => this.getContractInfo({ type: 'cancel' })}
-            destroyOnClose={true}
-          >
-            <SetPermissions
-              record={this.state.record}
-            />
-          </Modal>
           <div style={{ float: 'right', display: 'inline-block', cursor: 'pointer' }} onClick={this.addCustomer}>
-            <Button type="primary" style={{padding: '0 15px'}}>+ 添加角色</Button>
+            <Button type="primary" style={{padding: '0 15px'}}>+ 添加用户</Button>
           </div>
         </div>
         <Screen

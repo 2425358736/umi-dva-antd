@@ -1,10 +1,9 @@
 // 列表
 import React from 'react'
-import { message, Table, Input, Button, Popconfirm, Modal, Icon } from 'antd'
-import { getRequest, deleteRequest } from '../../../utils/api'
-import Screen from '../../../components/Screen/Screen'
+import { message, Table, Input, Button, Modal, Icon } from 'antd'
+import { getRequest } from '../../utils/api'
+import Screen from '../../components/Screen/Screen'
 import AddUp from './components/AddUp'
-import SetPermissions from './components/SetPermissions'
 const styles = require('./index.less')
 
 class Index extends React.Component {
@@ -31,8 +30,7 @@ class Index extends React.Component {
      *    };
      *    screenItem: {}; 搜索框参数
      *    loading: boolean; 加载等待
-     *    open: boolean 添加编辑Modal打开组件
-     *    openPermissions: boolean 设置权限Modal打开组件
+     *    open: boolean Modal打开组件
      *   }
      * }
      */
@@ -49,16 +47,14 @@ class Index extends React.Component {
       params: {
         pagination: {},
         filters: {
-          name: '',
+          username: '',
         },
         sorter: {},
       },
       screenItem: {
-        name: '',
+        username: '',
       },
       loading: false,
-      open: false,
-      openPermissions: false,
     }
   }
   componentDidMount = async () => {
@@ -72,7 +68,7 @@ class Index extends React.Component {
    */
   onChangeCustomerName = (e) => {
     const screenItemOne = this.state.screenItem
-    screenItemOne.name = e.target.value
+    screenItemOne.username = e.target.value
     this.setState({
       screenItem: screenItemOne,
     })
@@ -98,7 +94,6 @@ class Index extends React.Component {
     }
     this.setState({
       open: false,
-      openPermissions: false,
       record: {},
     })
   }
@@ -111,64 +106,42 @@ class Index extends React.Component {
     that.setState({
       columns: [
         {
-          title: '角色名',
-          width: 200,
-          dataIndex: 'name',
+          title: '姓名',
+          width: 150,
+          dataIndex: 'username',
         },
         {
-          title: 'code',
-          width: 200,
-          dataIndex: 'code',
+          title: '保证金',
+          width: 100,
+          dataIndex: 'sex',
         },
         {
-          title: '创建时间',
-          width: 200,
+          title: '保证金余额',
+          width: 150,
+          dataIndex: 'nickname',
+        },
+        {
+          title: '钱包余额',
+          width: 150,
+          dataIndex: 'phone',
+        },
+        {
+          title: '可用金额',
+          width: 150,
+          dataIndex: 'headImgggUrl',
+        },
+        {
+          title: '冻结金额',
+          width: 150,
           dataIndex: 'createTime',
         },
         {
-          title: '操作',
-          width: 200,
-          dataIndex: 'opt',
-          render(text, record) {
-            return (
-              <div>
-                <a onClick={() => that.edit(record)}>编辑</a>
-                <Popconfirm title="确定删除吗?" onConfirm={() => that.delete(record.id)}>
-                  <a style={{marginLeft: '20px'}}>删除</a>
-                </Popconfirm>
-                <a style={{marginLeft: '20px'}} onClick={() => that.setPermissions(record)}>设置权限</a>
-              </div>
-            )
-          },
+          title: '提现金额',
+          width: 150,
+          dataIndex: 'enabled',
         },
       ],
     })
-  }
-  /**
-   * 编辑
-   * @param record 编辑的对象
-   * @returns {Promise<void>}
-   */
-  edit = (record) => {
-    this.setState({
-      open: true,
-      record,
-    })
-  }
-  setPermissions = (record) => {
-    this.setState({
-      openPermissions: true,
-      record,
-    })
-  }
-  /**
-   * @param id 删除的id
-   * @returns {Promise<void>}
-   */
-  delete = async (id) => {
-    const data = await deleteRequest('/api-user/roles/' + id)
-    this.getContractInfo({type: 'submit'})
-    message.success(data.resp_msg)
   }
 
   /**
@@ -221,7 +194,7 @@ class Index extends React.Component {
       paramsOne.pagination.pageSize = 15
     }
     this.setState({ loading: true })
-    const data = await getRequest('/api-user/roles?page='
+    const data = await getRequest('/api-biz/wallet/list?page='
       + paramsOne.pagination.current + '&limit=' + paramsOne.pagination.pageSize)
     const paginationOne = this.state.pagination
     paginationOne.total = data.count
@@ -266,43 +239,13 @@ class Index extends React.Component {
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
         <div>
           <Input prefix={<Icon type="search" />}
-                 placeholder="搜索角色名"
+                 placeholder="搜索用户名"
                  style={{ width: 280, marginLeft: '10px' }}
-                 value={this.state.screenItem.name}
+                 value={this.state.screenItem.username}
                  onChange={this.onChangeCustomerName}
                  onPressEnter={this.handleSearch}
           />
           <Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>搜索</Button>
-          <Modal
-            title={this.state.record.id > 0 ? '编辑角色' : '添加角色'}
-            style={{ top: 20 }}
-            width={500}
-            visible={this.state.open}
-            footer={null}
-            onCancel={() => this.getContractInfo({ type: 'cancel' })}
-            destroyOnClose={true}
-          >
-            <AddUp
-              callback={this.getContractInfo}
-              record={this.state.record}
-            />
-          </Modal>
-          <Modal
-            title="设置权限"
-            style={{ top: 20 }}
-            width={500}
-            visible={this.state.openPermissions}
-            footer={null}
-            onCancel={() => this.getContractInfo({ type: 'cancel' })}
-            destroyOnClose={true}
-          >
-            <SetPermissions
-              record={this.state.record}
-            />
-          </Modal>
-          <div style={{ float: 'right', display: 'inline-block', cursor: 'pointer' }} onClick={this.addCustomer}>
-            <Button type="primary" style={{padding: '0 15px'}}>+ 添加角色</Button>
-          </div>
         </div>
         <Screen
           callback={this.callbackScreen}

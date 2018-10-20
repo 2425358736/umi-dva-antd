@@ -21,6 +21,7 @@ class MenuList extends React.Component {
     const key = []
     const arr = JSON.parse(JSON.stringify(this.state.menuList))
     this.lookup(arr, list, key)
+    debugger
     this.setState({
       openKeys: list,
       selectedKeys: key
@@ -29,14 +30,20 @@ class MenuList extends React.Component {
 
   // 根据连接查询父级目录数组
   lookup = (arr, list, key) => {
+    let bol = true
     arr.forEach((json, i) => {
-      list.push(json.key.toString())
-      if (json.path === this.state.url) {
-        key.push(json.key.toString())
-      } else if (typeof json.children !== 'undefined' && json.children.length > 0) {
-        this.lookup(json.children, list, key)
-      } else if (i === arr.length - 1) {
-        list.splice(list.length - 1, 1)
+      if (bol) {
+        list.push(json.key.toString())
+        if (json.path === this.state.url) {
+          key.push(json.key.toString())
+          bol = false
+        } else if (typeof json.children !== 'undefined' && json.children.length > 0) {
+          this.lookup(json.children, list, key)
+        } else if (i === arr.length - 1) {
+          list.splice(list.length - 1, 1)
+        } else if (typeof json.children === 'undefined') {
+          list.splice(list.length - 1, 1)
+        }
       }
     })
   }
@@ -79,8 +86,8 @@ class MenuList extends React.Component {
   render() {
     return (
       <Menu
-        theme="dark"
         mode="inline"
+        theme="dark"
         selectedKeys={this.state.selectedKeys}
         openKeys={this.state.openKeys}
         onOpenChange = {this.onOpenChange}
@@ -91,8 +98,7 @@ class MenuList extends React.Component {
             return (
               <SubMenu
                 key={menu.key}
-                title={!this.props.collapsed ?
-                  (<span><Icon type={menu.icon} />{menu.name}</span>) : (<Icon type={menu.icon} />)}>
+                title={<span><Icon type={menu.icon} /><span>{menu.name}</span></span>}>
                 {
                   this.recursion(menu.children)
                 }
@@ -102,6 +108,7 @@ class MenuList extends React.Component {
               return (
                 <Menu.Item key={menu.key}>
                   <Link to={menu.path}>
+                    <Icon type={menu.icon} />
                     <span>{menu.name}</span>
                   </Link>
                 </Menu.Item>

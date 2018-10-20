@@ -1,0 +1,24 @@
+.roleListDiv {
+  :global {
+    .ant-radio-button-wrapper {
+      margin: 0 4px;
+      border-radius: 4px;
+      background-color: #f3f3f3;
+      border: none;
+      height: 24px;
+      line-height: 24px;
+      color: #333;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+    }
+    .ant-radio-button-wrapper-checked {
+      background-color: #2083e4;
+      color: #fff;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+    }
+    .ant-radio-button-wrapper:not(:first-child)::before {
+      width: 0;
+    }
+  }
+}

@@ -1,7 +1,7 @@
 // 添加和修改组件
 import React from 'react'
 import { Button, Input, Form, message } from 'antd'
-import { postRequest } from '../../../../utils/api'
+import { postRequest } from '../../../utils/api'
 const styles = require('../index.less')
 
 const FormItem = Form.Item

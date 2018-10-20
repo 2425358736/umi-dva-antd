@@ -34,9 +34,7 @@ class Root extends React.Component<Props, {}> {
             collapsed={this.state.collapsed}
           >
             <div className={styles.logo} />
-            <MenuList
-              collapsed = {this.state.collapsed}
-            />
+            <MenuList />
           </Sider>
           <Layout>
             <Header style={{ background: '#fff', padding: 0 }}>

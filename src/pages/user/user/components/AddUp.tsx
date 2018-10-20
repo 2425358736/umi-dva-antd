@@ -37,10 +37,6 @@ class AddUp extends React.Component {
         name: this.props.record.name,
         code: this.props.record.code,
       })
-    } else {
-      this.props.form.setFieldsValue({
-        loginFlag: 1,
-      })
     }
   }
 
@@ -95,7 +91,6 @@ class AddUp extends React.Component {
   }
   render() {
       const { getFieldDecorator } = this.props.form
-      const { department } = this.props
       return (
         <div style={{ marginLeft: '10%', overflow: 'hidden' }} >
           <Form layout="horizontal">
