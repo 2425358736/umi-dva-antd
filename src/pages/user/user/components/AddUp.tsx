@@ -34,8 +34,10 @@ class AddUp extends React.Component {
     this.props.form.resetFields()
     if (this.props.record.id > 0) {
       this.props.form.setFieldsValue({
-        name: this.props.record.name,
-        code: this.props.record.code,
+        username: this.props.record.username,
+        password: this.props.record.password,
+        phone: this.props.record.phone,
+        nickname: this.props.record.nickname,
       })
     }
   }
@@ -64,12 +66,12 @@ class AddUp extends React.Component {
         if (this.props.record.id > 0) {
           json.id = this.props.record.id
           data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
+            '/api-user/users/saveOrUpdate',
             json
           )
         } else {
           data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
+            '/api-user/users/saveOrUpdate',
             json
           )
         }
@@ -95,34 +97,67 @@ class AddUp extends React.Component {
         <div style={{ marginLeft: '10%', overflow: 'hidden' }} >
           <Form layout="horizontal">
             <FormItem
-              label="角色名"
+              label="登录用户名"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
-              {getFieldDecorator('name', {
+              {getFieldDecorator('username', {
                   rules: [{
                     required: true,
-                    message: '请输入角色名',
+                    message: '请输入登录用户名',
                   }],
                 })(
 
-                  <Input placeholder="请输入角色名" />
+                  <Input placeholder="请输入登录用户名" />
                 )}
             </FormItem>
+            {!this.props.record.id > 0 && (
             <FormItem
-              label="code"
+              label="密码"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
-              {getFieldDecorator('code', {
-                  rules: [{
-                    required: true,
-                    message: '请输入code',
-                  }],
-                })(
+              {getFieldDecorator('password', {
+                rules: [{
+                  required: true,
+                  message: '请输入密码',
+                }],
+              })(
 
-                  <Input placeholder="请输入code" />
-                )}
+                <Input placeholder="请输入密码" />
+              )}
+            </FormItem>
+            )}
+            <FormItem
+              label="手机号"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('phone', {
+                rules: [{
+                  required: true,
+                  message: '请输入手机号',
+                }],
+              })(
+
+                <Input placeholder="请输入手机号" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="昵称"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('nickname', {
+                rules: [{
+                  required: true,
+                  message: '请输入昵称',
+                }],
+              })(
+
+                <Input placeholder="请输入昵称" />
+              )}
             </FormItem>
           </Form>
           <div style={{ float: 'right', marginRight: '8%', marginTop: 20 }}>

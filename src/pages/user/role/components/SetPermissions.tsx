@@ -93,6 +93,11 @@ class SetPermissions extends React.Component {
     return (
       <div style={{ marginLeft: '10%', overflow: 'hidden' }} >
         <Transfer
+          listStyle={{
+            width: 300,
+            height: 500,
+          }}
+          titles={['可用的权限', '当前拥有的权限']}
           dataSource={this.state.listPermissionsArr}
           showSearch={true}
           filterOption={this.filterOption}

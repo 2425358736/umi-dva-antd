@@ -290,7 +290,7 @@ class Index extends React.Component {
           <Modal
             title="设置权限"
             style={{ top: 20 }}
-            width={500}
+            width={800}
             visible={this.state.openPermissions}
             footer={null}
             onCancel={() => this.getContractInfo({ type: 'cancel' })}

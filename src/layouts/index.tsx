@@ -5,6 +5,8 @@ import styles from './index.css'
 import zhCN from 'antd/lib/locale-provider/zh_CN'
 import enUS from 'antd/lib/locale-provider/en_US'
 import MenuList from './MenuList'
+import GlobalHeader from  '../components/GlobalHeader'
+import { getRequest } from '../utils/api'
 
 const { Header, Sider, Content } = Layout
 
@@ -17,13 +19,21 @@ interface Props {
 class Root extends React.Component<Props, {}> {
   state = {
     collapsed: false,
+    currentUser: {}
   }
 
-  toggle = () => {
+  handleMenuCollapse = collapsed => {
     this.setState({
       collapsed: !this.state.collapsed,
     })
   }
+  componentDidMount = async () => {
+    const currentUser = await getRequest('/api-user/users/current')
+    this.setState({
+      currentUser
+    })
+  }
+
   render() {
     return (
       <LocaleProvider locale={this.props.lang === 'zh_CN' ? zhCN : enUS}>
@@ -38,13 +48,14 @@ class Root extends React.Component<Props, {}> {
           </Sider>
           <Layout>
             <Header style={{ background: '#fff', padding: 0 }}>
-              <Icon
-                className={styles.trigger}
-                type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                onClick={this.toggle}
+              <GlobalHeader
+                collapsed={true}
+                onCollapse={this.handleMenuCollapse}
+                currentUser={this.state.currentUser}
               />
             </Header>
-            <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
+            <Content style={{ margin: '24px 16px',
+              padding: 24, background: '#fff', minHeight: 280, overflowX: 'hidden' }}>
               {this.props.children}
             </Content>
           </Layout>
