@@ -1,7 +1,7 @@
 // 设置权限
 import React from 'react'
-import { Transfer } from 'antd'
-import { getRequest } from '../../../../utils/api'
+import { Transfer, Button, message } from 'antd'
+import { getRequest, postRequest } from '../../../../utils/api'
 const styles = require('../index.less')
 
 class SetPermissions extends React.Component {
@@ -46,10 +46,33 @@ class SetPermissions extends React.Component {
         }
       })
     })
+
     this.setState({
       listPermissionsArr,
       rolePermissionsArr,
     })
+  }
+
+  /**
+   * 表单提交方法
+   * @returns {Promise<void>}
+   */
+  handleSubmit = async () => {
+      this.setState({
+        buttonLoading: true,
+      })
+      const data = await postRequest(
+        '/api-user/permissions/granted',
+        {roleId: this.props.record.id, authIds: this.state.rolePermissionsArr}
+
+      )
+      if (data.resp_code === 0) {
+        this.props.callback({ type: 'submit' })
+      }
+      message.success(`${data.resp_msg}`)
+      this.setState({
+        buttonLoading: false,
+      })
   }
 
   filterOption = (inputValue, option) => {
@@ -63,8 +86,7 @@ class SetPermissions extends React.Component {
     this.props.callback({ type: 'cancel' })
   }
 
-  handleChange = (targetKeys, direction, moveKeys) => {
-    debugger
+  handleChange = (targetKeys) => {
     this.setState({ rolePermissionsArr: targetKeys })
   }
   render() {
@@ -79,6 +101,20 @@ class SetPermissions extends React.Component {
           rowKey={record => record.id}
           render={item => item.name}
         />
+        <div style={{ float: 'right', marginRight: '8%', marginTop: 20 }}>
+          <Button
+            onClick={this.handleCancel}
+            style={{ backgroundColor: 'rgba(243, 243, 243, 1)', color: '#666666', marginRight: 20 }}
+          >取消
+          </Button>
+          <Button
+            loading={this.state.buttonLoading}
+            onClick={this.handleSubmit}
+            type="primary"
+            style={{ }}
+          >提交
+          </Button>
+        </div>
       </div>
     )
   }

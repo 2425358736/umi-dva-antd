@@ -21,7 +21,6 @@ class MenuList extends React.Component {
     const key = []
     const arr = JSON.parse(JSON.stringify(this.state.menuList))
     this.lookup(arr, list, key)
-    debugger
     this.setState({
       openKeys: list,
       selectedKeys: key

@@ -297,6 +297,7 @@ class Index extends React.Component {
             destroyOnClose={true}
           >
             <SetPermissions
+              callback={this.getContractInfo}
               record={this.state.record}
             />
           </Modal>
