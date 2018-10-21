@@ -245,7 +245,7 @@ class Index extends React.Component {
       paramsOne.pagination.pageSize = 15
     }
     this.setState({ loading: true })
-    const data = await getRequest('/api-user/users?page='
+    const data = await getRequest('/api-biz/vehicle/list?page='
       + paramsOne.pagination.current + '&limit=' + paramsOne.pagination.pageSize)
     const paginationOne = this.state.pagination
     paginationOne.total = data.count
