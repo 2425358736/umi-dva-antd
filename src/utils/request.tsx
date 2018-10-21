@@ -80,16 +80,16 @@ export default function request(url, options) {
     .catch((e) => {
       const status = e.name
       if (status === 401) {
-        return
+        window.location.href = '/error/401'
       }
       if (status === 403) {
-        return
+        window.location.href = '/error/403'
       }
       if (status <= 504 && status >= 500) {
-        return
+        window.location.href = '/error/500'
       }
       if (status >= 404 && status < 422) {
-        return
+        window.location.href = '/error/404'
       }
     })
 }

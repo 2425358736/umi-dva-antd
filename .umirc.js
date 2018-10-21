@@ -46,6 +46,10 @@ export default {
       Routes: ['./routes/PrivateRoute.js'], // 用于权限权限控制
       routes: [
         { path: '/', component: 'index' },
+        { path: '/error/404', component: 'error/404' },
+        { path: '/error/401', component: 'error/401' },
+        { path: '/error/403', component: 'error/403' },
+        { path: '/error/500', component: 'error/500' },
         { path: '/users', component: 'users' },
         { path: '/creditCard', component: 'creditCard' },
         { path: '/car', component: 'car' },
