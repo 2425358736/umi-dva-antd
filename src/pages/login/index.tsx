@@ -57,7 +57,7 @@ class LoginPage extends Component {
               placeholder="请输入密码"
             />
           </div>
-          <div style={{ textAlign: 'left', cursor: 'pointer' }}>
+          <div style={{ textAlign: 'right', cursor: 'pointer', marginBottom: '24px' }}>
             <Tooltip title="忘记密码请联系贵公司管理员修改密码">
               <span style={{ color: '#666', fontSize: '14px' }}>忘记密码</span>
             </Tooltip>

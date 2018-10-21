@@ -13,7 +13,7 @@
   border-radius: 4px;
   overflow: hidden;
   .loginRight {
-    height: 450px;
+    // height: 450px;
     width: 400px;
     position: absolute;
     top: 50%;
@@ -26,8 +26,9 @@
     justify-content: center;
     h3 {
       font-family: "Microsoft YaHei UI", serif !important;
-      margin-bottom: 90px;
+      // margin-bottom: 90px;
       font-size: 22px;
+      margin: 20px 0;
     }
     input {
       outline: none;
@@ -54,7 +55,7 @@
       font-size: 16px;
     }
     .btnDom {
-      margin-top: 150px;
+      // margin-top: 150px;
     }
   }
   .icon {
@@ -84,14 +85,23 @@
   .main {
     .loginRight {
       h3 {
-        margin-bottom: 60px;
+        // margin-bottom: 60px;
       }
       .inputDom, .btnDom {
         width: 300px;
       }
       .btnDom {
-        margin-top: 70px;
+        // margin-top: 70px;
       }
+    }
+  }
+}
+
+// 移动设备
+@media screen and (max-width: 414px) {
+  .main {
+    .loginRight {
+      width: 90%;
     }
   }
 }
