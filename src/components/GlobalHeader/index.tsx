@@ -29,7 +29,9 @@ export default class GlobalHeader extends PureComponent {
           收件箱
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item key="logout">
+        <Menu.Item key="logout" onClick={() => {
+          localStorage.removeItem('Authorization')
+        }}>
           <Link to="/login">
             <Icon type="logout" />
             退出登录
@@ -37,6 +39,7 @@ export default class GlobalHeader extends PureComponent {
         </Menu.Item>
       </Menu>
     )
+
     return (
       <div className={styles.header}>
         <Icon

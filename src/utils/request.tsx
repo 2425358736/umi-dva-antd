@@ -91,5 +91,8 @@ export default function request(url, options) {
       if (status >= 404 && status < 422) {
         window.location.href = '/error/404'
       }
+      if (status === 'TypeError') {
+        window.location.href = '/login'
+      }
     })
 }
