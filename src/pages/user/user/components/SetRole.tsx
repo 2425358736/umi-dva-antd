@@ -1,10 +1,10 @@
-// 设置权限
+// 设置角色
 import React from 'react'
 import { Transfer, Button, message } from 'antd'
 import { getRequest, postRequest } from '../../../../utils/api'
 const styles = require('../index.less')
 
-class SetPermissions extends React.Component {
+class SetRole extends React.Component {
   constructor(props) {
     super(props)
     /**
@@ -18,8 +18,8 @@ class SetPermissions extends React.Component {
      */
     this.state = {
       buttonLoading: false,
-      listPermissionsArr: [],
-      rolePermissionsArr: [],
+      listRoleArr: [],
+      roleUserRoleArr: [],
     }
   }
 
@@ -32,24 +32,24 @@ class SetPermissions extends React.Component {
    * @returns {Promise<void>}
    */
   initialization = async () => {
-    const listPermissions = await getRequest('/api-user/permissions?page=0&limit=99999')
-    const rolePermissions = await getRequest('/api-user/permissions/' + this.props.record.id + '/permissions')
-    let listPermissionsArr = []
-    let rolePermissionsArr = []
-    listPermissions.data.forEach((json) => {
-      listPermissionsArr.push({id: json.id, name: json.name, permission: json.permission, roleId: this.props.record.id})
+    const listRole = await getRequest('/api-user/roles?page=0&limit=99999')
+    const roleUserRole = this.props.record.roles
+    let listRoleArr = []
+    let roleUserRoleArr = []
+    listRole.data.forEach((json) => {
+      listRoleArr.push({id: json.id, name: json.name})
     })
-    rolePermissions.forEach((json) => {
-      listPermissions.data.forEach((json2) => {
+    roleUserRole.forEach((json) => {
+      listRole.data.forEach((json2) => {
         if (json.id === json2.id) {
-          rolePermissionsArr.push(json.id)
+          roleUserRoleArr.push(json.id)
         }
       })
     })
 
     this.setState({
-      listPermissionsArr,
-      rolePermissionsArr,
+      listRoleArr,
+      roleUserRoleArr,
     })
   }
 
@@ -62,9 +62,8 @@ class SetPermissions extends React.Component {
         buttonLoading: true,
       })
       const data = await postRequest(
-        '/api-user/permissions/granted',
-        {roleId: this.props.record.id, authIds: this.state.rolePermissionsArr}
-
+        '/api-user/users/' + this.props.record.id + '/roles',
+        this.state.roleUserRoleArr
       )
       if (data.resp_code === 0) {
         this.props.callback({ type: 'submit' })
@@ -87,7 +86,7 @@ class SetPermissions extends React.Component {
   }
 
   handleChange = (targetKeys) => {
-    this.setState({ rolePermissionsArr: targetKeys })
+    this.setState({ roleUserRoleArr: targetKeys })
   }
   render() {
     return (
@@ -97,11 +96,11 @@ class SetPermissions extends React.Component {
             width: 300,
             height: 500,
           }}
-          titles={['可用的权限', '当前拥有的权限']}
-          dataSource={this.state.listPermissionsArr}
+          titles={['可用的角色', '当前拥有的角色']}
+          dataSource={this.state.listRoleArr}
           showSearch={true}
           filterOption={this.filterOption}
-          targetKeys={this.state.rolePermissionsArr}
+          targetKeys={this.state.roleUserRoleArr}
           onChange={this.handleChange}
           rowKey={record => record.id}
           render={item => item.name}
@@ -125,4 +124,4 @@ class SetPermissions extends React.Component {
   }
 }
 
-export default SetPermissions
+export default SetRole

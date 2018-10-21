@@ -4,6 +4,7 @@ import { message, Table, Input, Button, Popconfirm, Modal, Icon } from 'antd'
 import { getRequest, deleteRequest } from '../../../utils/api'
 import Screen from '../../../components/Screen/Screen'
 import AddUp from './components/AddUp'
+import SetRole from './components/SetRole'
 const styles = require('./index.less')
 
 class Index extends React.Component {
@@ -56,6 +57,7 @@ class Index extends React.Component {
       },
       loading: false,
       open: false,
+      openRole: false,
     }
   }
   componentDidMount = async () => {
@@ -95,6 +97,7 @@ class Index extends React.Component {
     }
     this.setState({
       open: false,
+      openRole: false,
       record: {},
     })
   }
@@ -161,11 +164,24 @@ class Index extends React.Component {
                 <Popconfirm title="确定删除吗?" onConfirm={() => that.delete(record.id)}>
                   <a style={{marginLeft: '20px'}}>删除</a>
                 </Popconfirm>
+                <a style={{marginLeft: '20px'}} onClick={() => that.setRole(record)} >角色</a>
               </div>
             )
           },
         },
       ],
+    })
+  }
+
+  /**
+   * 设置角色
+   * @param record
+   * @returns {Promise<void>}
+   */
+  setRole = async (record) => {
+    this.setState({
+      openRole: true,
+      record,
     })
   }
   /**
@@ -295,13 +311,28 @@ class Index extends React.Component {
           <Modal
             title={this.state.record.id > 0 ? '编辑用户' : '添加用户'}
             style={{ top: 20 }}
-            width={500}
+            width={600}
             visible={this.state.open}
             footer={null}
             onCancel={() => this.getContractInfo({ type: 'cancel' })}
             destroyOnClose={true}
           >
             <AddUp
+              callback={this.getContractInfo}
+              record={this.state.record}
+            />
+          </Modal>
+
+          <Modal
+            title="设置角色"
+            style={{ top: 20 }}
+            width={800}
+            visible={this.state.openRole}
+            footer={null}
+            onCancel={() => this.getContractInfo({ type: 'cancel' })}
+            destroyOnClose={true}
+          >
+            <SetRole
               callback={this.getContractInfo}
               record={this.state.record}
             />

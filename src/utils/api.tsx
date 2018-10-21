@@ -27,9 +27,7 @@ export function postRequest(url, params) {
   return new Promise((resolve, reject) => {
     request(http + url, {
       method: 'POST',
-      body: {
-        ...params,
-      },
+      body: params,
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('Authorization')
       }

@@ -35,7 +35,6 @@ class AddUp extends React.Component {
     if (this.props.record.id > 0) {
       this.props.form.setFieldsValue({
         username: this.props.record.username,
-        password: this.props.record.password,
         phone: this.props.record.phone,
         nickname: this.props.record.nickname,
       })
@@ -111,7 +110,6 @@ class AddUp extends React.Component {
                   <Input placeholder="请输入登录用户名" />
                 )}
             </FormItem>
-            {!this.props.record.id > 0 && (
             <FormItem
               label="密码"
               labelCol={{ span: 5 }}
@@ -127,7 +125,6 @@ class AddUp extends React.Component {
                 <Input placeholder="请输入密码" />
               )}
             </FormItem>
-            )}
             <FormItem
               label="手机号"
               labelCol={{ span: 5 }}
