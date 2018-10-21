@@ -200,10 +200,9 @@ class Index extends React.Component {
    * @returns {Promise<void>}
    */
   delete = async (id) => {
-    // const data = await deleteRequest('/api-user/users/' + id)
-    // this.getContractInfo({type: 'submit'})
-    // message.success(data.resp_msg)
-    message.success('没有删除接口')
+    const data = await getRequest('/api-user/users/updateEnabled?id=' + id + 'enabled=false')
+    this.getContractInfo({type: 'submit'})
+    message.success(data.resp_msg)
   }
 
   /**
