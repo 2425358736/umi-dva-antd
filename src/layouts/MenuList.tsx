@@ -5,7 +5,7 @@ import Link from 'umi/link'
 
 const { SubMenu } = Menu
 
-class MenuList extends React.Component {
+class MenuList extends React.Component<any, any> {
   constructor(props) {
     super(props)
     const url = location.pathname

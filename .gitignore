@@ -31,3 +31,4 @@ screenshots
 *.un~
 workspace.code-workspace
 .history
+.idea
