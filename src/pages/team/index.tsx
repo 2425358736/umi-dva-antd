@@ -151,7 +151,7 @@ class Index extends React.Component {
           width: 150,
           dataIndex: 'status',
           render(text) {
-            return text ? '已注册' : '待审核'
+            return text === '1' ? '已注册' : '待审核'
           },
         },
         {
@@ -286,7 +286,7 @@ class Index extends React.Component {
           <Modal
             title={this.state.record.id > 0 ? '编辑用户' : '添加用户'}
             style={{ top: 20 }}
-            width={500}
+            width={700}
             visible={this.state.open}
             footer={null}
             onCancel={() => this.getContractInfo({ type: 'cancel' })}
@@ -297,9 +297,9 @@ class Index extends React.Component {
               record={this.state.record}
             />
           </Modal>
-          <div style={{ float: 'right', display: 'inline-block', cursor: 'pointer' }} onClick={this.addCustomer}>
-            <Button type="primary" style={{padding: '0 15px'}}>+ 添加用户</Button>
-          </div>
+          {/*<div style={{ float: 'right', display: 'inline-block', cursor: 'pointer' }} onClick={this.addCustomer}>*/}
+            {/*<Button type="primary" style={{padding: '0 15px'}}>+ 添加用户</Button>*/}
+          {/*</div>*/}
         </div>
         <Screen
           callback={this.callbackScreen}

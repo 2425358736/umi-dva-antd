@@ -1,10 +1,16 @@
 // 添加和修改组件
 import React from 'react'
-import { Button, Input, Form, message } from 'antd'
+import moment from 'moment'
+import { Button, Select, Input, Form, message, DatePicker } from 'antd'
 import { postRequest } from '../../../utils/api'
 const styles = require('../index.less')
 
 const FormItem = Form.Item
+
+const Option = Select.Option
+
+const { TextArea } = Input
+
 class AddUp extends React.Component {
   constructor(props) {
     super(props)
@@ -34,8 +40,16 @@ class AddUp extends React.Component {
     this.props.form.resetFields()
     if (this.props.record.id > 0) {
       this.props.form.setFieldsValue({
-        name: this.props.record.name,
-        code: this.props.record.code,
+        username: this.props.record.username,
+        mobile: this.props.record.mobile,
+        birthday: this.props.record.licensefromdate ? moment(this.props.record.birthday, 'YYYY-MM-DD') : null,
+        licensefromdate: this.props.record.licensefromdate ?
+          moment(this.props.record.licensefromdate, 'YYYY-MM-DD') : null,
+        licenseexpirydate: this.props.record.licenseexpirydate ?
+          moment(this.props.record.licenseexpirydate, 'YYYY-MM-DD') : null,
+        licensetype: this.props.record.licensetype,
+        status: this.props.record.status.toString(),
+        remarks: this.props.record.remarks,
       })
     }
   }
@@ -64,12 +78,7 @@ class AddUp extends React.Component {
         if (this.props.record.id > 0) {
           json.id = this.props.record.id
           data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
-            json
-          )
-        } else {
-          data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
+            '/api-biz/renter/update',
             json
           )
         }
@@ -95,35 +104,134 @@ class AddUp extends React.Component {
         <div style={{ marginLeft: '10%', overflow: 'hidden' }} >
           <Form layout="horizontal">
             <FormItem
-              label="角色名"
+              label="姓名"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
-              {getFieldDecorator('name', {
+              {getFieldDecorator('username', {
                   rules: [{
                     required: true,
-                    message: '请输入角色名',
+                    message: '请输入姓名',
                   }],
                 })(
 
-                  <Input placeholder="请输入角色名" />
+                  <Input placeholder="请输入姓名" />
                 )}
             </FormItem>
             <FormItem
-              label="code"
+              label="手机号"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
-              {getFieldDecorator('code', {
+              {getFieldDecorator('mobile', {
                   rules: [{
                     required: true,
-                    message: '请输入code',
+                    message: '请输入手机号',
                   }],
                 })(
 
-                  <Input placeholder="请输入code" />
+                  <Input placeholder="请输入手机号" />
                 )}
             </FormItem>
+
+            <FormItem
+              label="出生日期"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('birthday', {
+                rules: [{
+                  required: true,
+                  message: '请选择出生日期',
+                }],
+              })(
+
+                <DatePicker style={{width: '367px'}} />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="领证日期"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('licensefromdate', {
+                rules: [{
+                  required: true,
+                  message: '请选择领证日期',
+                }],
+              })(
+
+                <DatePicker style={{width: '367px'}} />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="驾照到期日期"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('licenseexpirydate', {
+                rules: [{
+                  required: true,
+                  message: '请选择驾照到期日期',
+                }],
+              })(
+
+                <DatePicker style={{width: '367px'}} />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="准驾车型"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('licensetype', {
+                rules: [{
+                  required: true,
+                  message: '请输入准驾车型',
+                }],
+              })(
+
+                <Input placeholder="请输入准驾车型" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="状态"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('status', {
+                rules: [{
+                  required: true,
+                  message: '请选择状态',
+                }],
+              })(
+
+                <Select>
+                  <Option value="0">待审核</Option>
+                  <Option value="1">已注册</Option>
+                </Select>
+              )}
+            </FormItem>
+
+            <FormItem
+              label="备注"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('remarks', {
+                rules: [{
+                  required: true,
+                  message: '请输入备注',
+                }],
+              })(
+                <TextArea rows={4} />
+              )}
+            </FormItem>
+
           </Form>
           <div style={{ float: 'right', marginRight: '8%', marginTop: 20 }}>
             <Button

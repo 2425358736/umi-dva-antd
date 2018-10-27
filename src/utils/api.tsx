@@ -77,6 +77,10 @@ export function postFormDateRequest(url, params) {
     request(http + url, {
       method: 'POST',
       body: paramstr,
+      headers: {
+        Authorization: localStorage.getItem('Authorization') ?
+          'Bearer ' + localStorage.getItem('Authorization') : 'null'
+      }
     })
       .then(response => {
         const resultData = response

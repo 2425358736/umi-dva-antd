@@ -49,7 +49,7 @@ export default function request(url, options) {
       if (typeof newOptions.body === 'string') {
         newOptions = {
           method: newOptions.method,
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded', },
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...newOptions.headers},
           body: newOptions.body
         }
       } else {

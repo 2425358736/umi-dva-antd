@@ -293,7 +293,7 @@ class Index extends React.Component {
         <Modal
           title="发放"
           style={{ top: 20 }}
-          width={500}
+          width={700}
           visible={this.state.openGrant}
           footer={null}
           onCancel={() => this.getContractInfo({ type: 'cancel' })}

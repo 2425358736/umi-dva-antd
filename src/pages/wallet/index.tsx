@@ -225,14 +225,6 @@ class Index extends React.Component {
     this.handleTableChange(this.state.params.pagination, filters, this.state.params.sorter)
     this.columnsUp()
   }
-  /**
-   * 添加事件
-   */
-  addCustomer = () => {
-    this.setState({
-      open: true,
-    })
-  }
   render() {
     const that = this
     return (

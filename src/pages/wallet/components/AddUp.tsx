@@ -1,10 +1,11 @@
 // 添加和修改组件
 import React from 'react'
-import { Button, Input, Form, message } from 'antd'
-import { postRequest } from '../../../utils/api'
+import { Button, DatePicker, Select, Input, Form, message } from 'antd'
+import { postRequest, getRequest } from '../../../utils/api'
 const styles = require('../index.less')
 
 const FormItem = Form.Item
+const { Option } = Select
 class AddUp extends React.Component {
   constructor(props) {
     super(props)
@@ -18,6 +19,7 @@ class AddUp extends React.Component {
      * }
      */
     this.state = {
+      userList: [],
       buttonLoading: false,
     }
   }
@@ -32,6 +34,10 @@ class AddUp extends React.Component {
    */
   initialization = async () => {
     this.props.form.resetFields()
+    const userList = await getRequest('/api-biz/renter/list?page=0&limit=99999')
+    this.setState({
+      userList: userList.data
+    })
     if (this.props.record.id > 0) {
       this.props.form.setFieldsValue({
         name: this.props.record.name,
@@ -62,14 +68,9 @@ class AddUp extends React.Component {
         const json = this.props.form.getFieldsValue()
         let data
         if (this.props.record.id > 0) {
-          json.id = this.props.record.id
+          json.voucherid = this.props.record.id.toString()
           data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
-            json
-          )
-        } else {
-          data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
+            '/api-biz/vouchergrant/grant',
             json
           )
         }
@@ -95,33 +96,74 @@ class AddUp extends React.Component {
         <div style={{ marginLeft: '10%', overflow: 'hidden' }} >
           <Form layout="horizontal">
             <FormItem
-              label="角色名"
+              label="用户名"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
               {getFieldDecorator('name', {
                   rules: [{
                     required: true,
-                    message: '请输入角色名',
+                    message: '请选择用户名',
                   }],
                 })(
 
-                  <Input placeholder="请输入角色名" />
+                <Select
+                  showSearch={true}
+                  placeholder="请选择用户名"
+                  optionFilterProp="children"
+                >
+                  {this.state.userList.map(user => {
+                    return (<Option key={user.id}>{user.username}</Option>)
+                  })}
+                </Select>
                 )}
             </FormItem>
+
             <FormItem
-              label="code"
+              label="生效日期"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
-              {getFieldDecorator('code', {
+              {getFieldDecorator('starttime', {
+                rules: [{
+                  required: true,
+                  message: '请选择生效日期',
+                }],
+              })(
+
+                <DatePicker style={{width: '367px'}} />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="失效日期"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('endtime', {
+                rules: [{
+                  required: true,
+                  message: '请选择失效日期',
+                }],
+              })(
+
+                <DatePicker style={{width: '367px'}} />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="发放数量"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('vouchercount', {
                   rules: [{
                     required: true,
-                    message: '请输入code',
+                    message: '请输入发放数量',
                   }],
                 })(
 
-                  <Input placeholder="请输入code" />
+                  <Input placeholder="请输入发放数量" />
                 )}
             </FormItem>
           </Form>
