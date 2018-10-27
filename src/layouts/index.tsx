@@ -43,7 +43,7 @@ class Root extends React.Component<Props, {}> {
             collapsible={true}
             collapsed={this.state.collapsed}
           >
-            <div className={styles.logo} />
+              <a><div className={styles.logo} onClick={() => {window.location.href = '/'}} /></a>
             <MenuList />
           </Sider>
           <Layout>

@@ -47,12 +47,12 @@ class Index extends React.Component {
       params: {
         pagination: {},
         filters: {
-          username: '',
+          allowcode: '',
         },
         sorter: {},
       },
       screenItem: {
-        username: '',
+        allowcode: '',
       },
       loading: false,
       open: false,
@@ -69,7 +69,7 @@ class Index extends React.Component {
    */
   onChangeCustomerName = (e) => {
     const screenItemOne = this.state.screenItem
-    screenItemOne.username = e.target.value
+    screenItemOne.allowcode = e.target.value
     this.setState({
       screenItem: screenItemOne,
     })
@@ -109,42 +109,42 @@ class Index extends React.Component {
         {
           title: '识别码',
           width: 150,
-          dataIndex: 'username',
+          dataIndex: 'allowcode',
         },
         {
           title: '时间',
           width: 100,
-          dataIndex: 'sex',
+          dataIndex: 'violationtime',
         },
         {
           title: '车牌号',
           width: 150,
-          dataIndex: 'nickname',
+          dataIndex: 'license',
         },
         {
           title: '用户',
           width: 150,
-          dataIndex: 'phone',
+          dataIndex: 'username',
         },
         {
           title: '违章地点',
           width: 150,
-          dataIndex: 'ddd',
+          dataIndex: 'address',
         },
         {
           title: '监控编号',
           width: 150,
-          dataIndex: 'createTime',
+          dataIndex: 'monitorid',
         },
         {
           title: '罚款金额',
           width: 150,
-          dataIndex: 'enabled',
+          dataIndex: 'fineamount',
         },
         {
           title: '违章积分',
           width: 150,
-          dataIndex: 'enadddbled',
+          dataIndex: 'deductpoints',
         },
         {
           title: '操作',
@@ -281,9 +281,9 @@ class Index extends React.Component {
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
         <div>
           <Input prefix={<Icon type="search" />}
-                 placeholder="搜索用户名"
+                 placeholder="搜索识别码"
                  style={{ width: 280, marginLeft: '10px' }}
-                 value={this.state.screenItem.username}
+                 value={this.state.screenItem.allowcode}
                  onChange={this.onChangeCustomerName}
                  onPressEnter={this.handleSearch}
           />

@@ -113,32 +113,32 @@ class Index extends React.Component {
         {
           title: '保证金',
           width: 100,
-          dataIndex: 'sex',
+          dataIndex: 'deposit',
         },
         {
           title: '保证金余额',
           width: 150,
-          dataIndex: 'nickname',
+          dataIndex: 'remaindeposit',
         },
         {
           title: '钱包余额',
           width: 150,
-          dataIndex: 'phone',
+          dataIndex: 'walletamt',
         },
         {
           title: '可用金额',
           width: 150,
-          dataIndex: 'headImgggUrl',
+          dataIndex: 'avalamt',
         },
         {
           title: '冻结金额',
           width: 150,
-          dataIndex: 'createTime',
+          dataIndex: 'frozenamt',
         },
         {
           title: '提现金额',
           width: 150,
-          dataIndex: 'enabled',
+          dataIndex: 'cashamt',
         },
       ],
     })
@@ -239,7 +239,7 @@ class Index extends React.Component {
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
         <div>
           <Input prefix={<Icon type="search" />}
-                 placeholder="搜索用户名"
+                 placeholder="搜索姓名"
                  style={{ width: 280, marginLeft: '10px' }}
                  value={this.state.screenItem.username}
                  onChange={this.onChangeCustomerName}

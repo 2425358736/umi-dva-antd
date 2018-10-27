@@ -3,7 +3,7 @@ import React from 'react'
 import { message, Table, Input, Button, Popconfirm, Modal, Icon } from 'antd'
 import { getRequest, deleteRequest } from '../../utils/api'
 import Screen from '../../components/Screen/Screen'
-import AddUp from './components/AddUp'
+import Grant from './components/Grant'
 const styles = require('./index.less')
 
 class Index extends React.Component {
@@ -47,15 +47,16 @@ class Index extends React.Component {
       params: {
         pagination: {},
         filters: {
-          username: '',
+          name: '',
         },
         sorter: {},
       },
       screenItem: {
-        username: '',
+        name: '',
       },
       loading: false,
       open: false,
+      openGrant: false,
     }
   }
   componentDidMount = async () => {
@@ -69,7 +70,7 @@ class Index extends React.Component {
    */
   onChangeCustomerName = (e) => {
     const screenItemOne = this.state.screenItem
-    screenItemOne.username = e.target.value
+    screenItemOne.name = e.target.value
     this.setState({
       screenItem: screenItemOne,
     })
@@ -95,6 +96,7 @@ class Index extends React.Component {
     }
     this.setState({
       open: false,
+      openGrant: false,
       record: {},
     })
   }
@@ -109,59 +111,56 @@ class Index extends React.Component {
         {
           title: '名称',
           width: 150,
-          dataIndex: 'username',
+          dataIndex: 'name',
         },
         {
           title: '时间',
-          width: 100,
-          dataIndex: 'sex',
+          width: 200,
+          dataIndex: 'createtime',
         },
         {
           title: '描述',
           width: 150,
-          dataIndex: 'nickname',
+          dataIndex: 'description',
         },
         {
           title: '最大优惠金额',
           width: 150,
-          dataIndex: 'phone',
+          dataIndex: 'voucheramt',
         },
         {
           title: '折扣',
           width: 150,
-          dataIndex: 'headImddgUrl',
+          dataIndex: 'discount',
         },
         {
           title: '开始日期',
           width: 150,
-          dataIndex: 'createTime',
+          dataIndex: 'starttime',
         },
         {
           title: '结束日期',
           width: 150,
-          dataIndex: 'enabled',
+          dataIndex: 'endtime',
         },
         {
           title: '总数',
           width: 150,
-          dataIndex: 'enabled1',
+          dataIndex: 'tcount',
         },
         {
           title: '已使用',
           width: 150,
-          dataIndex: 'enabledff',
+          dataIndex: 'used',
         },
         {
           title: '操作',
-          width: 350,
+          width: 100,
           dataIndex: 'opt',
           render(text, record) {
             return (
               <div>
-                <a onClick={() => that.edit(record)}>编辑</a>
-                <Popconfirm title="确定删除吗?" onConfirm={() => that.delete(record.id)}>
-                  <a style={{marginLeft: '20px'}}>删除</a>
-                </Popconfirm>
+                <a onClick={() => that.openGrant(record)}>发放</a>
               </div>
             )
           },
@@ -174,21 +173,11 @@ class Index extends React.Component {
    * @param record 编辑的对象
    * @returns {Promise<void>}
    */
-  edit = async (record) => {
+  openGrant = async (record) => {
     this.setState({
-      open: true,
+      openGrant: true,
       record,
     })
-  }
-  /**
-   * @param id 删除的id
-   * @returns {Promise<void>}
-   */
-  delete = async (id) => {
-    // const data = await deleteRequest('/api-user/users/' + id)
-    // this.getContractInfo({type: 'submit'})
-    // message.success(data.resp_msg)
-    message.success('没有删除接口')
   }
 
   /**
@@ -272,44 +261,19 @@ class Index extends React.Component {
     this.handleTableChange(this.state.params.pagination, filters, this.state.params.sorter)
     this.columnsUp()
   }
-  /**
-   * 添加事件
-   */
-  addCustomer = () => {
-    this.setState({
-      open: true,
-    })
-  }
   render() {
     const that = this
     return (
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
         <div>
           <Input prefix={<Icon type="search" />}
-                 placeholder="搜索用户名"
+                 placeholder="搜索名称"
                  style={{ width: 280, marginLeft: '10px' }}
-                 value={this.state.screenItem.username}
+                 value={this.state.screenItem.name}
                  onChange={this.onChangeCustomerName}
                  onPressEnter={this.handleSearch}
           />
           <Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>搜索</Button>
-          <Modal
-            title={this.state.record.id > 0 ? '编辑用户' : '添加用户'}
-            style={{ top: 20 }}
-            width={500}
-            visible={this.state.open}
-            footer={null}
-            onCancel={() => this.getContractInfo({ type: 'cancel' })}
-            destroyOnClose={true}
-          >
-            <AddUp
-              callback={this.getContractInfo}
-              record={this.state.record}
-            />
-          </Modal>
-          <div style={{ float: 'right', display: 'inline-block', cursor: 'pointer' }} onClick={this.addCustomer}>
-            <Button type="primary" style={{padding: '0 15px'}}>+ 添加用户</Button>
-          </div>
         </div>
         <Screen
           callback={this.callbackScreen}
@@ -325,6 +289,21 @@ class Index extends React.Component {
           loading={this.state.loading}
           onChange={this.handleTableChange}
         />
+
+        <Modal
+          title="发放"
+          style={{ top: 20 }}
+          width={500}
+          visible={this.state.openGrant}
+          footer={null}
+          onCancel={() => this.getContractInfo({ type: 'cancel' })}
+          destroyOnClose={true}
+        >
+          <Grant
+            callback={this.getContractInfo}
+            record={this.state.record}
+          />
+        </Modal>
       </div>
     )
   }

@@ -53,12 +53,12 @@ class Index extends React.Component {
       params: {
         pagination: {},
         filters: {
-          username: '',
+          allowcode: '',
         },
         sorter: {},
       },
       screenItem: {
-        username: '',
+        allowcode: '',
       },
       loading: false,
       open: false,
@@ -75,7 +75,7 @@ class Index extends React.Component {
    */
   onChangeCustomerName = (e) => {
     const screenItemOne = this.state.screenItem
-    screenItemOne.username = e.target.value
+    screenItemOne.allowcode = e.target.value
     this.setState({
       screenItem: screenItemOne,
     })
@@ -115,54 +115,58 @@ class Index extends React.Component {
         {
           title: '识别码',
           width: 150,
-          dataIndex: 'username',
+          dataIndex: 'allowcode',
         },
         {
           title: '时间',
-          width: 100,
-          dataIndex: 'sex',
+          width: 200,
+          dataIndex: 'createtime',
         },
         {
           title: '用户',
           width: 150,
-          dataIndex: 'nickname',
+          dataIndex: 'username',
         },
         {
           title: '车辆',
           width: 150,
-          dataIndex: 'phone',
+          dataIndex: 'vehicle',
         },
         {
           title: '总费用',
           width: 150,
-          dataIndex: 'headImgUrl',
+          dataIndex: 'totalfee',
         },
         {
           title: '时长费用',
           width: 150,
-          dataIndex: 'createTime',
+          dataIndex: 'durationfee',
         },
         {
           title: '里程费用',
           width: 150,
-          dataIndex: 'enabled',
+          dataIndex: 'distancefee',
         },
         {
           title: '订单状态',
           width: 150,
-          dataIndex: 'createTime',
+          dataIndex: 'status',
+          render(text) {
+            return text === '0' ? '订单未开始' :
+              text === '1' ?  '订单计费中' :
+                text === '2' ?  '等待支付' :
+                  text === '3' ?  '订单取消' :
+                    text === '4' ?  '订单完成' : ''
+          },
         },
         {
           title: '操作',
-          width: 350,
+          width: 150,
           dataIndex: 'opt',
           render(text, record) {
             return (
               <div>
                 <a onClick={() => that.edit(record)}>编辑</a>
-                <Popconfirm title="确定删除吗?" onConfirm={() => that.delete(record.id)}>
-                  <a style={{marginLeft: '20px'}}>删除</a>
-                </Popconfirm>
               </div>
             )
           },
@@ -180,16 +184,6 @@ class Index extends React.Component {
       open: true,
       record,
     })
-  }
-  /**
-   * @param id 删除的id
-   * @returns {Promise<void>}
-   */
-  delete = async (id) => {
-    // const data = await deleteRequest('/api-user/users/' + id)
-    // this.getContractInfo({type: 'submit'})
-    // message.success(data.resp_msg)
-    message.success('没有删除接口')
   }
 
   /**
@@ -287,30 +281,13 @@ class Index extends React.Component {
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
         <div>
           <Input prefix={<Icon type="search" />}
-                 placeholder="搜索用户名"
+                 placeholder="搜索识别码"
                  style={{ width: 280, marginLeft: '10px' }}
-                 value={this.state.screenItem.username}
+                 value={this.state.screenItem.allowcode}
                  onChange={this.onChangeCustomerName}
                  onPressEnter={this.handleSearch}
           />
           <Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>搜索</Button>
-          <Modal
-            title={this.state.record.id > 0 ? '编辑用户' : '添加用户'}
-            style={{ top: 20 }}
-            width={500}
-            visible={this.state.open}
-            footer={null}
-            onCancel={() => this.getContractInfo({ type: 'cancel' })}
-            destroyOnClose={true}
-          >
-            <AddUp
-              callback={this.getContractInfo}
-              record={this.state.record}
-            />
-          </Modal>
-          {/*<div style={{ float: 'right', display: 'inline-block', cursor: 'pointer' }} onClick={this.addCustomer}>*/}
-            {/*<Button type="primary" style={{padding: '0 15px'}}>+ 添加用户</Button>*/}
-          {/*</div>*/}
         </div>
         <Screen
           callback={this.callbackScreen}
@@ -326,6 +303,20 @@ class Index extends React.Component {
           loading={this.state.loading}
           onChange={this.handleTableChange}
         />
+        <Modal
+          title={this.state.record.id > 0 ? '编辑订单' : '添加订单'}
+          style={{ top: 20 }}
+          width={500}
+          visible={this.state.open}
+          footer={null}
+          onCancel={() => this.getContractInfo({ type: 'cancel' })}
+          destroyOnClose={true}
+        >
+          <AddUp
+            callback={this.getContractInfo}
+            record={this.state.record}
+          />
+        </Modal>
       </div>
     )
   }

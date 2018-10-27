@@ -143,27 +143,27 @@ class Index extends React.Component {
         {
           title: '优惠金额',
           width: 150,
-          dataIndex: 'enabled',
+          dataIndex: 'opt5',
         },
         {
           title: '车辆总数',
           width: 150,
-          dataIndex: 'enabled',
+          dataIndex: 'opt4',
         },
         {
           title: '活跃车辆',
           width: 150,
-          dataIndex: 'enabled',
+          dataIndex: 'opt3',
         },
         {
           title: '非活跃车辆',
           width: 150,
-          dataIndex: 'enabled',
+          dataIndex: 'opt2',
         },
         {
           title: '下架车辆',
           width: 150,
-          dataIndex: 'enabled',
+          dataIndex: 'opt1',
         },
       ],
     })

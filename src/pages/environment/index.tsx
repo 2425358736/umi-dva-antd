@@ -47,12 +47,12 @@ class Index extends React.Component {
       params: {
         pagination: {},
         filters: {
-          username: '',
+          name: '',
         },
         sorter: {},
       },
       screenItem: {
-        username: '',
+        name: '',
       },
       loading: false,
       open: false,
@@ -69,7 +69,7 @@ class Index extends React.Component {
    */
   onChangeCustomerName = (e) => {
     const screenItemOne = this.state.screenItem
-    screenItemOne.username = e.target.value
+    screenItemOne.name = e.target.value
     this.setState({
       screenItem: screenItemOne,
     })
@@ -109,42 +109,36 @@ class Index extends React.Component {
         {
           title: '站点名称',
           width: 150,
-          dataIndex: 'username',
+          dataIndex: 'name',
         },
         {
           title: '地址',
           width: 300,
-          dataIndex: 'sex',
+          dataIndex: 'address',
         },
         {
           title: '车位总数',
           width: 150,
-          dataIndex: 'nickname',
+          dataIndex: 'address',
         },
         {
           title: '可用车辆数',
           width: 150,
-          dataIndex: 'phone',
+          dataIndex: 'carno',
         },
         {
-          title: '能否充电',
+          title: '能否充电（暂无字段）',
           width: 150,
-          dataIndex: 'enabled',
-          render(text) {
-            return text ? '能' : '否'
-          },
+          dataIndex: 'opt1',
         },
         {
           title: '操作',
-          width: 350,
+          width: 150,
           dataIndex: 'opt',
           render(text, record) {
             return (
               <div>
                 <a onClick={() => that.edit(record)}>编辑</a>
-                <Popconfirm title="确定删除吗?" onConfirm={() => that.delete(record.id)}>
-                  <a style={{marginLeft: '20px'}}>删除</a>
-                </Popconfirm>
               </div>
             )
           },
@@ -162,16 +156,6 @@ class Index extends React.Component {
       open: true,
       record,
     })
-  }
-  /**
-   * @param id 删除的id
-   * @returns {Promise<void>}
-   */
-  delete = async (id) => {
-    // const data = await deleteRequest('/api-user/users/' + id)
-    // this.getContractInfo({type: 'submit'})
-    // message.success(data.resp_msg)
-    message.success('没有删除接口')
   }
 
   /**
@@ -271,7 +255,7 @@ class Index extends React.Component {
           <Input prefix={<Icon type="search" />}
                  placeholder="搜索站点名"
                  style={{ width: 280, marginLeft: '10px' }}
-                 value={this.state.screenItem.username}
+                 value={this.state.screenItem.name}
                  onChange={this.onChangeCustomerName}
                  onPressEnter={this.handleSearch}
           />

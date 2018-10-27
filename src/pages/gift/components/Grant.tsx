@@ -5,7 +5,7 @@ import { postRequest } from '../../../utils/api'
 const styles = require('../index.less')
 
 const FormItem = Form.Item
-class AddUp extends React.Component {
+class Grant extends React.Component {
   constructor(props) {
     super(props)
     /**
@@ -144,6 +144,6 @@ class AddUp extends React.Component {
   }
 }
 
-const AddUpComponent = Form.create()(AddUp)
+const GrantComponent = Form.create()(Grant)
 
-export default AddUpComponent
+export default GrantComponent

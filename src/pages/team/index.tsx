@@ -124,7 +124,7 @@ class Index extends React.Component {
         {
           title: '驾照',
           width: 150,
-          dataIndex: 'thirdparyname',
+          dataIndex: 'drivelicense',
         },
         {
           title: '出生日期',
@@ -134,24 +134,24 @@ class Index extends React.Component {
         {
           title: '驾照到期日期',
           width: 150,
-          dataIndex: 'licensefromdate',
+          dataIndex: 'licenseexpirydate',
         },
         {
           title: '准驾车型',
           width: 150,
-          dataIndex: 'bzd',
+          dataIndex: 'licensetype',
         },
         {
           title: '剩余积分',
           width: 150,
-          dataIndex: 'bzd',
+          dataIndex: 'licensepoints',
         },
         {
           title: '状态',
           width: 150,
           dataIndex: 'status',
           render(text) {
-            return text ? '已注册' : '未注册'
+            return text ? '已注册' : '待审核'
           },
         },
         {
@@ -162,9 +162,6 @@ class Index extends React.Component {
             return (
               <div>
                 <a onClick={() => that.edit(record)}>编辑</a>
-                <Popconfirm title="确定删除吗?" onConfirm={() => that.delete(record.id)}>
-                  <a style={{marginLeft: '20px'}}>删除</a>
-                </Popconfirm>
               </div>
             )
           },
@@ -182,16 +179,6 @@ class Index extends React.Component {
       open: true,
       record,
     })
-  }
-  /**
-   * @param id 删除的id
-   * @returns {Promise<void>}
-   */
-  delete = async (id) => {
-    // const data = await deleteRequest('/api-user/users/' + id)
-    // this.getContractInfo({type: 'submit'})
-    // message.success(data.resp_msg)
-    message.success('没有删除接口')
   }
 
   /**

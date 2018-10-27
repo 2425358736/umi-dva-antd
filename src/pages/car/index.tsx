@@ -47,12 +47,12 @@ class Index extends React.Component {
       params: {
         pagination: {},
         filters: {
-          username: '',
+          license: '',
         },
         sorter: {},
       },
       screenItem: {
-        username: '',
+        license: '',
       },
       loading: false,
       open: false,
@@ -69,7 +69,7 @@ class Index extends React.Component {
    */
   onChangeCustomerName = (e) => {
     const screenItemOne = this.state.screenItem
-    screenItemOne.username = e.target.value
+    screenItemOne.license = e.target.value
     this.setState({
       screenItem: screenItemOne,
     })
@@ -109,51 +109,42 @@ class Index extends React.Component {
         {
           title: '车牌',
           width: 150,
-          dataIndex: 'username',
+          dataIndex: 'license',
         },
         {
           title: '品牌',
           width: 100,
-          dataIndex: 'sex',
-          render(text) {
-            return text === 0 ? '男' : '女'
-          },
+          dataIndex: 'brand',
         },
         {
           title: '型号',
           width: 150,
-          dataIndex: 'nickname',
+          dataIndex: 'model',
         },
         {
-          title: '上牌日期',
+          title: '上牌日期(暂无字段)',
           width: 150,
-          dataIndex: 'phone',
+          dataIndex: 'createtime',
         },
         {
-          title: '公里数',
+          title: '公里数(暂无字段)',
           width: 150,
-          dataIndex: 'headImgUrl',
-          render(text) {
-            return <img src={text} height="100" width="100" />
-          },
+          dataIndex: 'opt1',
         },
         {
-          title: '续航日期',
+          title: '续航里程(暂无字段)',
           width: 150,
-          dataIndex: 'createTime',
+          dataIndex: 'opt2',
         },
         {
           title: '年检到期',
           width: 150,
-          dataIndex: 'enabled',
-          render(text) {
-            return text ? '启用' : '停用'
-          },
+          dataIndex: 'nextcheckdate',
         },
         {
           title: '保险日期',
           width: 150,
-          dataIndex: 'createTime',
+          dataIndex: 'insurancestartdate',
         },
         {
           title: '操作',
@@ -163,6 +154,7 @@ class Index extends React.Component {
             return (
               <div>
                 <a onClick={() => that.edit(record)}>编辑</a>
+                <a style={{marginLeft: '20px'}} >轨迹回放</a>
                 <Popconfirm title="确定删除吗?" onConfirm={() => that.delete(record.id)}>
                   <a style={{marginLeft: '20px'}}>删除</a>
                 </Popconfirm>
@@ -290,9 +282,9 @@ class Index extends React.Component {
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
         <div>
           <Input prefix={<Icon type="search" />}
-                 placeholder="搜索用户名"
+                 placeholder="搜索车牌"
                  style={{ width: 280, marginLeft: '10px' }}
-                 value={this.state.screenItem.username}
+                 value={this.state.screenItem.license}
                  onChange={this.onChangeCustomerName}
                  onPressEnter={this.handleSearch}
           />

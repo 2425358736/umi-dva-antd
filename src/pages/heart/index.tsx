@@ -46,12 +46,12 @@ class Index extends React.Component {
       params: {
         pagination: {},
         filters: {
-          username: '',
+          insuranceno: '',
         },
         sorter: {},
       },
       screenItem: {
-        username: '',
+        insuranceno: '',
       },
       loading: false,
       open: false,
@@ -68,7 +68,7 @@ class Index extends React.Component {
    */
   onChangeCustomerName = (e) => {
     const screenItemOne = this.state.screenItem
-    screenItemOne.username = e.target.value
+    screenItemOne.insuranceno = e.target.value
     this.setState({
       screenItem: screenItemOne,
     })
@@ -108,30 +108,27 @@ class Index extends React.Component {
         {
           title: '保险单号',
           width: 150,
-          dataIndex: 'username',
+          dataIndex: 'insuranceno',
         },
         {
           title: '车牌',
           width: 100,
-          dataIndex: 'sex',
-          render(text) {
-            return text === 0 ? '男' : '女'
-          },
+          dataIndex: 'license',
         },
         {
           title: '车架号',
           width: 150,
-          dataIndex: 'nickname',
+          dataIndex: 'serialno',
         },
         {
           title: '保险生效时间',
           width: 150,
-          dataIndex: 'phone',
+          dataIndex: 'starttime',
         },
         {
           title: '保险失效时间',
           width: 150,
-          dataIndex: 'createTime',
+          dataIndex: 'endtime',
         },
       ],
     })
@@ -232,9 +229,9 @@ class Index extends React.Component {
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
         <div>
           <Input prefix={<Icon type="search" />}
-                 placeholder="搜索用户名"
+                 placeholder="搜索保险单号"
                  style={{ width: 280, marginLeft: '10px' }}
-                 value={this.state.screenItem.username}
+                 value={this.state.screenItem.insuranceno}
                  onChange={this.onChangeCustomerName}
                  onPressEnter={this.handleSearch}
           />
