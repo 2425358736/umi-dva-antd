@@ -119,7 +119,7 @@ class Index extends React.Component {
         {
           title: '车位总数',
           width: 150,
-          dataIndex: 'address',
+          dataIndex: 'parkno',
         },
         {
           title: '可用车辆数',

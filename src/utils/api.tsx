@@ -73,14 +73,15 @@ export function postFormDateRequest(url, params) {
   if (paramstr !== '') {
     paramstr = paramstr.substr(0, paramstr.length - 1)
   }
+  let headers = {}
+  if (url !== '/api-auth/oauth/token') {
+      headers = { Authorization: 'Bearer ' + localStorage.getItem('Authorization')}
+    }
   return new Promise((resolve, reject) => {
     request(http + url, {
       method: 'POST',
       body: paramstr,
-      headers: {
-        Authorization: localStorage.getItem('Authorization') ?
-          'Bearer ' + localStorage.getItem('Authorization') : 'null'
-      }
+      headers: headers
     })
       .then(response => {
         const resultData = response
