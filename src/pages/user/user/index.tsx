@@ -142,7 +142,7 @@ class Index extends React.Component {
         },
         {
           title: '创建时间',
-          width: 150,
+          width: 200,
           dataIndex: 'createTime',
         },
         {
@@ -348,6 +348,7 @@ class Index extends React.Component {
         <Table
           style={{ marginTop: '20px' }}
           rowKey="id"
+          scroll={{ x: 1500  }}
           columns={this.state.columns}
           dataSource={this.state.dataSource}
           pagination={this.state.pagination}

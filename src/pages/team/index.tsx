@@ -1,6 +1,6 @@
 // 列表
 import React from 'react'
-import { message, Table, Input, Button, Popconfirm, Modal, Icon } from 'antd'
+import { message, Drawer, Table, Input, Button, Popconfirm, Modal, Icon } from 'antd'
 import { getRequest, deleteRequest } from '../../utils/api'
 import Screen from '../../components/Screen/Screen'
 import AddUp from './components/AddUp'
@@ -56,6 +56,7 @@ class Index extends React.Component {
       },
       loading: false,
       open: false,
+      openInfo: false,
     }
   }
   componentDidMount = async () => {
@@ -95,6 +96,7 @@ class Index extends React.Component {
     }
     this.setState({
       open: false,
+      openInfo: false,
       record: {},
     })
   }
@@ -110,10 +112,13 @@ class Index extends React.Component {
           title: '姓名',
           width: 150,
           dataIndex: 'username',
+          render(text) {
+            return (<a onClick={() => { that.setState({openInfo: true})}}>{text}</a>)
+          },
         },
         {
           title: '注册日期',
-          width: 100,
+          width: 200,
           dataIndex: 'createtime',
         },
         {
@@ -128,12 +133,12 @@ class Index extends React.Component {
         },
         {
           title: '出生日期',
-          width: 150,
+          width: 200,
           dataIndex: 'birthday',
         },
         {
           title: '驾照到期日期',
-          width: 150,
+          width: 200,
           dataIndex: 'licenseexpirydate',
         },
         {
@@ -265,11 +270,11 @@ class Index extends React.Component {
   /**
    * 添加事件
    */
-  addCustomer = () => {
-    this.setState({
-      open: true,
-    })
-  }
+  // addCustomer = () => {
+  //   this.setState({
+  //     open: true,
+  //   })
+  // }
   render() {
     const that = this
     return (
@@ -309,12 +314,26 @@ class Index extends React.Component {
         <Table
           style={{ marginTop: '20px' }}
           rowKey="id"
+          scroll={{ x: 1500  }}
           columns={this.state.columns}
           dataSource={this.state.dataSource}
           pagination={this.state.pagination}
           loading={this.state.loading}
           onChange={this.handleTableChange}
         />
+
+        <Drawer
+          title="用户信息"
+          placement="right"
+          closable={false}
+          width={700}
+          onClose={() => {this.setState({openInfo: false})}}
+          visible={this.state.openInfo}
+        >
+          <p>用户信息...</p>
+          <p>用户信息...</p>
+          <p>用户信息...</p>
+        </Drawer>
       </div>
     )
   }

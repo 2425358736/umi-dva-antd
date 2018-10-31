@@ -135,12 +135,12 @@ class Index extends React.Component {
         },
         {
           title: '开始日期',
-          width: 150,
+          width: 200,
           dataIndex: 'starttime',
         },
         {
           title: '结束日期',
-          width: 150,
+          width: 200,
           dataIndex: 'endtime',
         },
         {
@@ -283,6 +283,7 @@ class Index extends React.Component {
         <Table
           style={{ marginTop: '20px' }}
           rowKey="id"
+          scroll={{ x: 1500  }}
           columns={this.state.columns}
           dataSource={this.state.dataSource}
           pagination={this.state.pagination}

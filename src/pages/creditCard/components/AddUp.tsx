@@ -1,10 +1,11 @@
 // 添加和修改组件
 import React from 'react'
-import { Button, Input, Form, message } from 'antd'
-import { postRequest } from '../../../utils/api'
+import { Button, Select, Input, Form, message } from 'antd'
+import { postFormDateRequest } from '../../../utils/api'
 const styles = require('../index.less')
 
 const FormItem = Form.Item
+const Option = Select.Option
 class AddUp extends React.Component {
   constructor(props) {
     super(props)
@@ -31,11 +32,11 @@ class AddUp extends React.Component {
    * @returns {Promise<void>}
    */
   initialization = async () => {
+    debugger
     this.props.form.resetFields()
     if (this.props.record.id > 0) {
       this.props.form.setFieldsValue({
-        name: this.props.record.name,
-        code: this.props.record.code,
+        orderstatus: this.props.record.status.toString(),
       })
     }
   }
@@ -62,14 +63,9 @@ class AddUp extends React.Component {
         const json = this.props.form.getFieldsValue()
         let data
         if (this.props.record.id > 0) {
-          json.id = this.props.record.id
-          data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
-            json
-          )
-        } else {
-          data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
+          json.orderid = this.props.record.id
+          data = await postFormDateRequest(
+            '/api-biz/orders/updateOrderStatus',
             json
           )
         }
@@ -95,33 +91,24 @@ class AddUp extends React.Component {
         <div style={{ marginLeft: '10%', overflow: 'hidden' }} >
           <Form layout="horizontal">
             <FormItem
-              label="角色名"
+              label="订单状态"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
-              {getFieldDecorator('name', {
+              {getFieldDecorator('orderstatus', {
                   rules: [{
                     required: true,
-                    message: '请输入角色名',
+                    message: '请选择订单状态',
                   }],
                 })(
 
-                  <Input placeholder="请输入角色名" />
-                )}
-            </FormItem>
-            <FormItem
-              label="code"
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 15 }}
-            >
-              {getFieldDecorator('code', {
-                  rules: [{
-                    required: true,
-                    message: '请输入code',
-                  }],
-                })(
-
-                  <Input placeholder="请输入code" />
+                <Select>
+                  <Option value="0">订单未开始</Option>
+                  <Option value="1">订单计费中</Option>
+                  <Option value="2">等待支付</Option>
+                  <Option value="3">订单取消</Option>
+                  <Option value="4">订单完成</Option>
+                </Select>
                 )}
             </FormItem>
           </Form>

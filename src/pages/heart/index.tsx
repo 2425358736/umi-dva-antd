@@ -122,12 +122,12 @@ class Index extends React.Component {
         },
         {
           title: '保险生效时间',
-          width: 150,
+          width: 200,
           dataIndex: 'starttime',
         },
         {
           title: '保险失效时间',
-          width: 150,
+          width: 200,
           dataIndex: 'endtime',
         },
       ],
@@ -245,6 +245,7 @@ class Index extends React.Component {
         <Table
           style={{ marginTop: '20px' }}
           rowKey="id"
+          scroll={{ x: 1500  }}
           columns={this.state.columns}
           dataSource={this.state.dataSource}
           pagination={this.state.pagination}

@@ -107,12 +107,12 @@ class Index extends React.Component {
       columns: [
         {
           title: '日期',
-          width: 150,
+          width: 200,
           dataIndex: 'username',
         },
         {
           title: '订单总数',
-          width: 100,
+          width: 150,
           dataIndex: 'sex',
         },
         {
@@ -132,7 +132,7 @@ class Index extends React.Component {
         },
         {
           title: '创建时间',
-          width: 150,
+          width: 200,
           dataIndex: 'createTime',
         },
         {
@@ -280,6 +280,7 @@ class Index extends React.Component {
         <Table
           style={{ marginTop: '20px' }}
           rowKey="id"
+          scroll={{ x: 1500  }}
           columns={this.state.columns}
           dataSource={this.state.dataSource}
           pagination={this.state.pagination}
