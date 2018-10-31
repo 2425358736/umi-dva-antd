@@ -108,27 +108,27 @@ class Index extends React.Component {
         {
           title: '日期',
           width: 200,
-          dataIndex: 'username',
+          dataIndex: 'settledate',
         },
         {
           title: '订单总数',
           width: 150,
-          dataIndex: 'sex',
+          dataIndex: 'ordercount',
         },
         {
           title: '已完成订单',
           width: 150,
-          dataIndex: 'nickname',
+          dataIndex: 'completed',
         },
         {
           title: '未支付订单',
           width: 150,
-          dataIndex: 'phone',
+          dataIndex: 'unpaid',
         },
         {
           title: '总金额',
           width: 150,
-          dataIndex: 'headImgUrl',
+          dataIndex: 'ordramt',
         },
         {
           title: '创建时间',
@@ -138,32 +138,32 @@ class Index extends React.Component {
         {
           title: '支付金额',
           width: 150,
-          dataIndex: 'enabled',
+          dataIndex: 'paidamt',
         },
         {
           title: '优惠金额',
           width: 150,
-          dataIndex: 'opt5',
+          dataIndex: 'discountamt',
         },
         {
           title: '车辆总数',
           width: 150,
-          dataIndex: 'opt4',
+          dataIndex: 'vehiclecount',
         },
         {
           title: '活跃车辆',
           width: 150,
-          dataIndex: 'opt3',
+          dataIndex: 'vehicleactive',
         },
         {
-          title: '非活跃车辆',
+          title: '非活跃车辆(无字段)',
           width: 150,
           dataIndex: 'opt2',
         },
         {
           title: '下架车辆',
           width: 150,
-          dataIndex: 'opt1',
+          dataIndex: 'vehicleoffline',
         },
       ],
     })
@@ -219,7 +219,7 @@ class Index extends React.Component {
       paramsOne.pagination.pageSize = 15
     }
     this.setState({ loading: true })
-    const data = await getRequest('/api-user/users?page='
+    const data = await getRequest('/api-biz/settle/list?page='
       + paramsOne.pagination.current + '&limit=' + paramsOne.pagination.pageSize)
     const paginationOne = this.state.pagination
     paginationOne.total = data.count
