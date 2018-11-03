@@ -30,6 +30,7 @@
     "rc-color-picker": "^1.2.6",
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
+    "react-qmap": "^0.1.5",
     "tslint-config-prettier": "^1.15.0"
   },
   "devDependencies": {

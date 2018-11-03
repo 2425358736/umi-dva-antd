@@ -46,6 +46,7 @@ class AddUp extends React.Component {
       let brand = []
       brand = [this.props.record.brand, this.props.record.lineno, this.props.record.yearno, this.props.record.model]
       this.props.form.setFieldsValue({
+        qrcode: this.props.record.qrcode,
         license: this.props.record.license,
         serialno: this.props.record.serialno,
         brands: brand,
@@ -54,6 +55,12 @@ class AddUp extends React.Component {
         nextcheckdate:  moment(this.props.record.nextcheckdate, 'YYYY-MM-DD'),
         insurancestartdate:  moment(this.props.record.insurancestartdate, 'YYYY-MM-DD'),
         insuranceenddate:  moment(this.props.record.insuranceenddate, 'YYYY-MM-DD'),
+        perdistancefee: this.props.record.perdistancefee,
+        mindistance: this.props.record.mindistance,
+        mindistancefee: this.props.record.mindistancefee,
+        perdurationfee: this.props.record.perdurationfee,
+        buydate: moment(this.props.record.buydate, 'YYYY-MM-DD'),
+        factory: this.props.record.factory,
       })
     }
   }
@@ -119,6 +126,22 @@ class AddUp extends React.Component {
       return (
         <div style={{ marginLeft: '10%', overflow: 'hidden' }} >
           <Form layout="horizontal">
+
+            <FormItem
+              label="车辆编号"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('qrcode', {
+                rules: [{
+                  required: true,
+                  message: '请输入车辆编号',
+                }],
+              })(
+
+                <Input placeholder="请输入车辆编号" />
+              )}
+            </FormItem>
             <FormItem
               label="车牌号"
               labelCol={{ span: 5 }}
@@ -272,6 +295,96 @@ class AddUp extends React.Component {
               )}
             </FormItem>
 
+            <FormItem
+              label="每公里收费"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('perdistancefee', {
+                rules: [{
+                  required: true,
+                  message: '请输入每公里收费',
+                }],
+              })(
+                <Input placeholder="请输入每公里收费" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="起步距离"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('mindistance', {
+                rules: [{
+                  required: true,
+                  message: '请输入起步距离',
+                }],
+              })(
+                <Input placeholder="请输入起步距离" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="起步价格"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('mindistancefee', {
+                rules: [{
+                  required: true,
+                  message: '请输入起步价格',
+                }],
+              })(
+                <Input placeholder="请输入起步价格" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="每分钟收费"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('perdurationfee', {
+                rules: [{
+                  required: true,
+                  message: '请输入每分钟收费',
+                }],
+              })(
+                <Input placeholder="请输入每分钟收费" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="制造商"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('factory', {
+                rules: [{
+                  required: true,
+                  message: '请输入制造商',
+                }],
+              })(
+                <Input placeholder="请输入制造商" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="购置日期"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('buydate', {
+                rules: [{
+                  required: true,
+                  message: '请选择购置日期',
+                }],
+              })(
+
+                <DatePicker style={{width: '367px'}} />
+              )}
+            </FormItem>
           </Form>
           <div style={{ float: 'right', marginRight: '8%', marginTop: 20 }}>
             <Button

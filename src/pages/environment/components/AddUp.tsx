@@ -1,10 +1,13 @@
 // 添加和修改组件
 import React from 'react'
 import { Button, Input, Form, message } from 'antd'
+import ReactQMap from 'react-qmap'
 import { postRequest } from '../../../utils/api'
+
 const styles = require('../index.less')
 
 const FormItem = Form.Item
+
 class AddUp extends React.Component {
   constructor(props) {
     super(props)
@@ -19,13 +22,14 @@ class AddUp extends React.Component {
      */
     this.state = {
       buttonLoading: false,
+      latitude: 30.53786,
+      longitude: 104.07265,
     }
   }
 
   componentDidMount() {
-    this.initialization()
+      this.initialization()
   }
-
   /**
    * 初始化方法
    * @returns {Promise<void>}
@@ -33,9 +37,16 @@ class AddUp extends React.Component {
   initialization = async () => {
     this.props.form.resetFields()
     if (this.props.record.id > 0) {
+      this.setState({
+        latitude: this.props.record.latitude,
+        longitude: this.props.record.longtitude,
+      })
       this.props.form.setFieldsValue({
         name: this.props.record.name,
-        code: this.props.record.code,
+        address: this.props.record.address,
+        parkno: this.props.record.parkno,
+        carno: this.props.record.carno,
+        imgurl: this.props.record.imgurl,
       })
     }
   }
@@ -60,16 +71,18 @@ class AddUp extends React.Component {
           buttonLoading: true,
         })
         const json = this.props.form.getFieldsValue()
+        json.longtitude = this.state.longitude.toFixed(5)
+        json.latitude = this.state.latitude.toFixed(5)
         let data
         if (this.props.record.id > 0) {
           json.id = this.props.record.id
           data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
+            '/api-biz/station/update',
             json
           )
         } else {
           data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
+            '/api-biz/station/save',
             json
           )
         }
@@ -89,40 +102,120 @@ class AddUp extends React.Component {
   handleCancel = () => {
     this.props.callback({ type: 'cancel' })
   }
+
+  MyMapComponent = (props) =>
+    <GoogleMap
+      defaultZoom={8}
+      defaultCenter={{ lat: -34.397, lng: 150.644 }}
+    >
+      {props.isMarkerShown && <Marker position={{ lat: -34.397, lng: 150.644 }} />}
+    </GoogleMap>
+
   render() {
       const { getFieldDecorator } = this.props.form
+      const that = this
       return (
         <div style={{ marginLeft: '10%', overflow: 'hidden' }} >
           <Form layout="horizontal">
             <FormItem
-              label="角色名"
+              label="名称"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
               {getFieldDecorator('name', {
                   rules: [{
                     required: true,
-                    message: '请输入角色名',
+                    message: '请输入名称',
                   }],
                 })(
 
-                  <Input placeholder="请输入角色名" />
+                  <Input placeholder="请输入名称" />
                 )}
             </FormItem>
             <FormItem
-              label="code"
+              label="地址"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
-              {getFieldDecorator('code', {
+              {getFieldDecorator('address', {
                   rules: [{
                     required: true,
-                    message: '请输入code',
+                    message: '请输入地址',
                   }],
                 })(
 
-                  <Input placeholder="请输入code" />
+                  <Input placeholder="请输入地址" />
                 )}
+            </FormItem>
+
+            <FormItem
+              label="车位数"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('parkno', {
+                rules: [{
+                  required: true,
+                  message: '请输入车位数',
+                }],
+              })(
+
+                <Input placeholder="请输入车位数" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="车辆"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('carno', {
+                rules: [{
+                  required: true,
+                  message: '请输入车辆',
+                }],
+              })(
+
+                <Input placeholder="请输入车辆" />
+              )}
+            </FormItem>
+            <FormItem
+              label="图标"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('imgurl', {
+                rules: [{
+                  required: true,
+                  message: '请输入图标',
+                }],
+              })(
+
+                <Input placeholder="请输入图标" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="地图"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              <ReactQMap
+                center={{latitude: this.state.latitude, longitude: this.state.longitude}}
+                mySpot={{latitude: this.state.latitude, longitude: this.state.longitude}}
+                initialOptions={{zoomControl: true, mapTypeControl: true}}
+                apiKey="UEXBZ-BOMLW-2XART-OJ322-X52T3-BQBXD"
+                style={{height: 300}}
+                getMap = {(map, maps) => {
+                  debugger
+                  maps.event.addListener(map, 'click', function(event) {
+                    that.setState({
+                      latitude: event.latLng.getLat(),
+                      longitude: event.latLng.getLng()
+                    })
+                  })
+                }}
+              />
             </FormItem>
           </Form>
           <div style={{ float: 'right', marginRight: '8%', marginTop: 20 }}>
