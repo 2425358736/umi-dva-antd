@@ -10,6 +10,7 @@ import { Table, Input, Button, Drawer, Modal, Icon } from 'antd'
 import { getRequest } from '../../utils/api'
 import Screen from '../../components/Screen/Screen'
 import AddUp from './components/AddUp'
+import Info from './components/Info'
 const styles = require('./index.less')
 
 class Index extends React.Component {
@@ -129,7 +130,7 @@ class Index extends React.Component {
                 <a onClick={() => {
                   that.setState({
                     openOrder: true,
-                    id: record.id
+                    record: record
                   })
                 }}>{text}</a>
               </div>
@@ -359,9 +360,10 @@ class Index extends React.Component {
           title="用户信息"
           placement="right"
           closable={false}
-          width={700}
+          width={900}
           onClose={() => {this.setState({openUser: false})}}
           visible={this.state.openUser}
+          destroyOnClose={true}
         >
           <p>用户信息...</p>
           <p>用户信息...</p>
@@ -372,22 +374,24 @@ class Index extends React.Component {
           title="订单信息"
           placement="right"
           closable={false}
-          width={700}
+          width={900}
           onClose={() => {this.setState({openOrder: false})}}
           visible={this.state.openOrder}
+          destroyOnClose={true}
         >
-          <p>订单信息...</p>
-          <p>订单信息...</p>
-          <p>订单信息...</p>
+          <Info
+            record={this.state.record}
+          />
         </Drawer>
 
         <Drawer
           title="车辆信息"
           placement="right"
           closable={false}
-          width={700}
+          width={900}
           onClose={() => {this.setState({openCar: false})}}
           visible={this.state.openCar}
+          destroyOnClose={true}
         >
           <p>车辆信息...</p>
           <p>车辆信息...</p>

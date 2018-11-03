@@ -329,6 +329,7 @@ class Index extends React.Component {
           width={700}
           onClose={() => {this.setState({openInfo: false})}}
           visible={this.state.openInfo}
+          destroyOnClose={true}
         >
           <p>用户信息...</p>
           <p>用户信息...</p>

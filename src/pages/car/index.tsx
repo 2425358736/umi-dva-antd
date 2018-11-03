@@ -4,6 +4,7 @@ import { message, Table, Input, Button, Popconfirm, Modal, Icon, Drawer } from '
 import { getRequest, postFormDateRequest } from '../../utils/api'
 import Screen from '../../components/Screen/Screen'
 import AddUp from './components/AddUp'
+import Info from './components/Info'
 const styles = require('./index.less')
 
 class Index extends React.Component {
@@ -340,13 +341,14 @@ class Index extends React.Component {
           title="车辆信息"
           placement="right"
           closable={false}
-          width={700}
+          width={900}
           onClose={() => {this.setState({openCar: false})}}
           visible={this.state.openCar}
+          destroyOnClose={true}
         >
-          <p>车辆信息...</p>
-          <p>车辆信息...</p>
-          <p>车辆信息...</p>
+          <Info
+            record={this.state.record}
+          />
         </Drawer>
       </div>
     )

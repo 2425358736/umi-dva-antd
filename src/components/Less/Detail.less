@@ -1,0 +1,318 @@
+:global {
+  .ant-tooltip-inner {
+    max-width: 500px;
+  }
+  .ant-notification {
+    color: #333;
+  }
+  .ant-notification-notice {
+    padding: 16px 16px;
+  }
+  .ant-modal-body {
+    padding: 16px;
+  }
+  .ant-notification-notice-close-x::after {
+    font-size: 20px;
+  }
+}
+
+.containt {
+  font-family: 'Microsoft YaHei', serif;
+  overflow: auto;
+  .creditInfor {
+    margin: 0 20px;
+    .customer {
+      margin-top: 10px;
+      font-size: 20px;
+      text-align: left;
+      display: inline-block;
+      color: rgba(0, 0, 0, 1);
+    }
+    .buttons {
+      float: right;
+      margin-top: 15px;
+      margin-right: 10px;
+      color: #091b51;
+      //>span:hover {
+      //  color: #108ee9;
+      //}
+      .iconStyle {
+        font-size: 20px;
+        margin-right: 5px;
+        margin-left: 20px;
+        color: #6582cc;
+      }
+    }
+  }
+  .creditmess {
+    width: 100%;
+    display: flex;
+    min-height: 130px;
+    padding: 39px 0;
+    text-align: center;
+    background: rgba(88, 135, 232, 1);
+    box-shadow: 0 0 0 rgba(135, 135, 135, 0.5);
+  }
+  .rentMessage {
+    width: 80%;
+    padding-top: 20px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    text-align: center;
+  }
+  .details {
+    border-radius: 6px;
+    padding: 20px;
+    .context {
+      overflow: hidden;
+      .left {
+        float: left;
+        width: 49%;
+      }
+      .right {
+        float: left;
+        width: 49%;
+        margin-left: 2%;
+      }
+      .contractDetail {
+        background-color: white;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid #ededed;
+      }
+      .pickerFa {
+        position: absolute;
+        top: 0;
+        left: 20px;
+        z-index: 99;
+      }
+      .itemValue1 {
+        padding: 10px 20px;
+        height: 340px;
+      }
+      .itemValue2 {
+        padding: 10px 20px;
+        height: 200px;
+      }
+      .itemValue3 {
+        padding: 10px 20px;
+        height: 340px;
+      }
+      .itemValue4 {
+        padding: 10px 20px;
+        height: 240px;
+      }
+      .itemValue5 {
+        padding: 10px 20px;
+        height: 240px;
+      }
+    }
+    .title {
+      font-size: 18px;
+      text-align: center;
+      background-color: #d2d5de;
+      height: 40px;
+      line-height: 40px;
+    }
+    .rightLine {
+      border-right: 1px dashed #d6d6d6;
+    }
+    .customerTitle {
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: #777;
+    }
+    .customerVal {
+      margin-bottom: 0;
+      font-size: 16px;
+      color: #141414;
+    }
+    .houseInfo {
+      height: 240px;
+      overflow: auto;
+    }
+    .houseInfo2 {
+      height: 140px;
+      overflow: auto;
+    }
+    ul {
+      -webkit-padding-start: 0;
+      > li {
+        list-style: none;
+        border-bottom: 1px solid #bdbdbd;
+        margin-top: 10px;
+        .buildName {
+          width: 100%;
+          overflow: hidden;
+          margin-bottom: 0;
+          font-size: 16px;
+          text-overflow: ellipsis;
+          word-break: break-all;
+          white-space: nowrap;
+        }
+        .address {
+          color: #777;
+          margin-top: 10px;
+        }
+        .controlName {
+          overflow: hidden;
+          font-size: 18px;
+          white-space: nowrap;
+        }
+        .delEdit {
+          margin-bottom: 20px;
+          .buttonControl {
+            color: #169bd5;
+            cursor: pointer;
+            border: none;
+          }
+        }
+      }
+    }
+    ul li:last-child {
+      border-bottom: none;
+    }
+    .addRecord {
+      position: relative;
+      margin-bottom: 0;
+      padding: 10px 0;
+      border-top: 1px solid #cecece;
+    }
+    .rentDetail {
+      margin-top: 20px;
+      background-color: white;
+      border: 1px solid #ededed;
+      border-radius: 6px;
+      overflow: hidden;
+      .contractTitle {
+        margin-bottom: 6px;
+        text-align: center;
+        color: #777;
+        font-size: 14px;
+      }
+      .contractVal {
+        margin-bottom: 18px;
+        text-align: center;
+        color: #141414;
+        font-size: 16px;
+        font-family: 'Microsoft YaHei', serif;
+      }
+      .titleDiv {
+        font-size: 18px;
+        text-align: center;
+        background-color: #d2d5de;
+        height: 40px;
+        line-height: 40px;
+      }
+      .controlAir {
+        display: flex;
+        width: 100%;
+        padding: 20px 0 30px;
+        .controlItem {
+          width: 16%;
+          margin: 0 2%;
+        }
+      }
+    }
+    .billDetail {
+      margin-top: 10px;
+      .shouldGet {
+        overflow: hidden;
+        width: 100%;
+        margin-top: 16px;
+        .billStatus {
+          float: left;
+          text-align: left;
+          font-size: 14px;
+          width: 40%;
+          .billTitle {
+            margin-left: 16px;
+            margin-right: 10px;
+          }
+          .billResult {
+            color: #f33;
+          }
+        }
+        .billNum {
+          color: #f33;
+          margin-right: 20px;
+        }
+      }
+      .shouldBill {
+        float: right;
+        text-align: left;
+        font-size: 14px;
+        .billTitleTwo {
+          margin-right: 10px;
+          color: #949494;
+        }
+      }
+    }
+    .buttons {
+      margin: 20px 0;
+    }
+    .billList {
+      border: 1px solid #ededed;
+      margin-top: 20px;
+      border-radius: 6px;
+      background-color: white;
+      overflow: hidden;
+      .rentReason {
+        flex: 1;
+        margin-left: 20px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+      .rentReasonCheck {
+        flex: 9;
+        margin-left: 20px;
+        margin-top: 20px;
+        color: #3dc1ff;
+        margin-bottom: 20px;
+      }
+      .titleDiv {
+        font-size: 18px;
+        text-align: center;
+        background-color: #d2d5de;
+        height: 40px;
+        line-height: 40px;
+      }
+      .addLiu {
+        float: right;
+        cursor: pointer;
+        margin-right: 20px;
+        font-size: 14px;
+        margin-bottom: 0;
+      }
+    }
+    .sumRent {
+      font-size: 18px;
+      float: right;
+      color: rgb(51, 51, 51);
+      margin: 20px 20px 20px 0;
+    }
+    .rentMoney {
+      width: 80%;
+      margin: 0 auto;
+      padding-top: 20px;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      text-align: center;
+    }
+    .totalMoney {
+      padding: 10px 0;
+      text-align: center;
+      .money {
+        font-size: 28px;
+        color: rgb(51, 51, 51);
+        margin-bottom: 10px;
+      }
+      .moneyTitle {
+        font-size: 16px;
+      }
+    }
+  }
+}
