@@ -1,7 +1,7 @@
 // 列表
 import React from 'react'
-import { message, Table, Input, Button, Popconfirm, Modal, Icon } from 'antd'
-import { getRequest, deleteRequest } from '../../utils/api'
+import { message, Table, Input, Button, Popconfirm, Modal, Icon, Drawer } from 'antd'
+import { getRequest, postFormDateRequest } from '../../utils/api'
 import Screen from '../../components/Screen/Screen'
 import AddUp from './components/AddUp'
 const styles = require('./index.less')
@@ -56,6 +56,7 @@ class Index extends React.Component {
       },
       loading: false,
       open: false,
+      openCar: false,
     }
   }
   componentDidMount = async () => {
@@ -95,6 +96,7 @@ class Index extends React.Component {
     }
     this.setState({
       open: false,
+      openCar: false,
       record: {},
     })
   }
@@ -110,6 +112,18 @@ class Index extends React.Component {
           title: '车牌',
           width: 150,
           dataIndex: 'license',
+          render(text, record) {
+            return (
+              <div>
+                <a onClick={() => {
+                  that.setState({
+                    openCar: true,
+                    id: record.id
+                  })
+                }}>{text}</a>
+              </div>
+            )
+          },
         },
         {
           title: '品牌',
@@ -181,10 +195,9 @@ class Index extends React.Component {
    * @returns {Promise<void>}
    */
   delete = async (id) => {
-    // const data = await deleteRequest('/api-user/users/' + id)
-    // this.getContractInfo({type: 'submit'})
-    // message.success(data.resp_msg)
-    message.success('没有删除接口')
+    const data = await postFormDateRequest('/api-biz/vehicle/delete', {id: id})
+    this.getContractInfo({type: 'submit'})
+    message.success(data.resp_msg)
   }
 
   /**
@@ -292,7 +305,7 @@ class Index extends React.Component {
           <Modal
             title={this.state.record.id > 0 ? '编辑车辆' : '添加车辆'}
             style={{ top: 20 }}
-            width={500}
+            width={800}
             visible={this.state.open}
             footer={null}
             onCancel={() => this.getContractInfo({ type: 'cancel' })}
@@ -322,6 +335,19 @@ class Index extends React.Component {
           loading={this.state.loading}
           onChange={this.handleTableChange}
         />
+
+        <Drawer
+          title="车辆信息"
+          placement="right"
+          closable={false}
+          width={700}
+          onClose={() => {this.setState({openCar: false})}}
+          visible={this.state.openCar}
+        >
+          <p>车辆信息...</p>
+          <p>车辆信息...</p>
+          <p>车辆信息...</p>
+        </Drawer>
       </div>
     )
   }

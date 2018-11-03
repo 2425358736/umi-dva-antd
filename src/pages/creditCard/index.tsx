@@ -6,8 +6,8 @@
  * @Description: 订单 - 页面
  */
 import React from 'react'
-import { message, Table, Input, Button, Popconfirm, Modal, Icon } from 'antd'
-import { getRequest, deleteRequest } from '../../utils/api'
+import { Table, Input, Button, Drawer, Modal, Icon } from 'antd'
+import { getRequest } from '../../utils/api'
 import Screen from '../../components/Screen/Screen'
 import AddUp from './components/AddUp'
 const styles = require('./index.less')
@@ -62,6 +62,10 @@ class Index extends React.Component {
       },
       loading: false,
       open: false,
+      openUser: false,
+      openOrder: false,
+      openCar: false,
+
     }
   }
   componentDidMount = async () => {
@@ -101,6 +105,9 @@ class Index extends React.Component {
     }
     this.setState({
       open: false,
+      openUser: false,
+      openOrder: false,
+      openCar: false,
       record: {},
     })
   }
@@ -116,6 +123,18 @@ class Index extends React.Component {
           title: '识别码',
           width: 150,
           dataIndex: 'allowcode',
+          render(text, record) {
+            return (
+              <div>
+                <a onClick={() => {
+                  that.setState({
+                    openOrder: true,
+                    id: record.id
+                  })
+                }}>{text}</a>
+              </div>
+            )
+          },
         },
         {
           title: '时间',
@@ -126,11 +145,35 @@ class Index extends React.Component {
           title: '用户',
           width: 150,
           dataIndex: 'username',
+          render(text, record) {
+            return (
+              <div>
+                <a onClick={() => {
+                  that.setState({
+                    openUser: true,
+                    id: record.id
+                  })
+                }}>{text}</a>
+              </div>
+            )
+          },
         },
         {
           title: '车辆',
           width: 150,
           dataIndex: 'vehicle',
+          render(text, record) {
+            return (
+              <div>
+                <a onClick={() => {
+                  that.setState({
+                    openCar: true,
+                    id: record.id
+                  })
+                }}>{text}</a>
+              </div>
+            )
+          },
         },
         {
           title: '总费用',
@@ -267,14 +310,7 @@ class Index extends React.Component {
     this.handleTableChange(this.state.params.pagination, filters, this.state.params.sorter)
     this.columnsUp()
   }
-  /**
-   * 添加事件
-   */
-  addCustomer = () => {
-    this.setState({
-      open: true,
-    })
-  }
+
   render() {
     const that = this
     return (
@@ -318,6 +354,46 @@ class Index extends React.Component {
             record={this.state.record}
           />
         </Modal>
+
+        <Drawer
+          title="用户信息"
+          placement="right"
+          closable={false}
+          width={700}
+          onClose={() => {this.setState({openUser: false})}}
+          visible={this.state.openUser}
+        >
+          <p>用户信息...</p>
+          <p>用户信息...</p>
+          <p>用户信息...</p>
+        </Drawer>
+
+        <Drawer
+          title="订单信息"
+          placement="right"
+          closable={false}
+          width={700}
+          onClose={() => {this.setState({openOrder: false})}}
+          visible={this.state.openOrder}
+        >
+          <p>订单信息...</p>
+          <p>订单信息...</p>
+          <p>订单信息...</p>
+        </Drawer>
+
+        <Drawer
+          title="车辆信息"
+          placement="right"
+          closable={false}
+          width={700}
+          onClose={() => {this.setState({openCar: false})}}
+          visible={this.state.openCar}
+        >
+          <p>车辆信息...</p>
+          <p>车辆信息...</p>
+          <p>车辆信息...</p>
+        </Drawer>
+
       </div>
     )
   }

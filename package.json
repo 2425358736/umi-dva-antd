@@ -27,6 +27,7 @@
     "antd": "^3.10.1",
     "axios": "^0.18.0",
     "dva": "^2.4.0",
+    "rc-color-picker": "^1.2.6",
     "react": "^16.5.1",
     "react-dom": "^16.5.1",
     "tslint-config-prettier": "^1.15.0"

@@ -38,12 +38,6 @@ class AddUp extends React.Component {
     this.setState({
       userList: userList.data
     })
-    if (this.props.record.id > 0) {
-      this.props.form.setFieldsValue({
-        name: this.props.record.name,
-        code: this.props.record.code,
-      })
-    }
   }
 
   /**
