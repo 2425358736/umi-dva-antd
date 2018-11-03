@@ -1,10 +1,13 @@
 // 添加和修改组件
 import React from 'react'
-import { Button, Input, Form, message } from 'antd'
-import { postRequest } from '../../../utils/api'
+import { Button, Input, Form, message, Select, DatePicker } from 'antd'
+import { postRequest, getRequest } from '../../../utils/api'
+import moment from 'moment'
 const styles = require('../index.less')
 
 const FormItem = Form.Item
+const { Option } = Select
+
 class AddUp extends React.Component {
   constructor(props) {
     super(props)
@@ -19,6 +22,7 @@ class AddUp extends React.Component {
      */
     this.state = {
       buttonLoading: false,
+      userList: [],
     }
   }
 
@@ -32,10 +36,22 @@ class AddUp extends React.Component {
    */
   initialization = async () => {
     this.props.form.resetFields()
+    const userList = await getRequest('/api-biz/renter/list?page=0&limit=99999')
+    this.setState({
+      userList: userList.data
+    })
+    this.props.form.resetFields()
     if (this.props.record.id > 0) {
       this.props.form.setFieldsValue({
-        name: this.props.record.name,
-        code: this.props.record.code,
+        username: this.props.record.username,
+        allowcode: this.props.record.allowcode,
+        violationtime: moment(this.props.record.violationtime, 'YYYY-MM-DD'),
+        license: this.props.record.license,
+        address: this.props.record.address,
+        monitorid: this.props.record.monitorid,
+        fineamount: this.props.record.fineamount,
+        deductpoints: this.props.record.deductpoints,
+        status: this.props.record.status.toString(),
       })
     }
   }
@@ -64,12 +80,12 @@ class AddUp extends React.Component {
         if (this.props.record.id > 0) {
           json.id = this.props.record.id
           data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
+            '/api-biz/violation/update',
             json
           )
         } else {
           data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
+            '/api-biz/violation/save',
             json
           )
         }
@@ -95,35 +111,161 @@ class AddUp extends React.Component {
         <div style={{ marginLeft: '10%', overflow: 'hidden' }} >
           <Form layout="horizontal">
             <FormItem
-              label="角色名"
+              label="用户名"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
-              {getFieldDecorator('name', {
+              {getFieldDecorator('username', {
+                rules: [{
+                  required: true,
+                  message: '请选择用户名',
+                }],
+              })(
+
+                <Select
+                  showSearch={true}
+                  placeholder="请选择用户名"
+                  optionFilterProp="children"
+                >
+                  {this.state.userList.map(user => {
+                    return (<Option key={user.username}>{user.username}</Option>)
+                  })}
+                </Select>
+              )}
+            </FormItem>
+
+            <FormItem
+              label="识别码"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('allowcode', {
                   rules: [{
                     required: true,
-                    message: '请输入角色名',
+                    message: '请输入识别码',
                   }],
                 })(
 
-                  <Input placeholder="请输入角色名" />
+                  <Input placeholder="请输入识别码" />
                 )}
             </FormItem>
             <FormItem
-              label="code"
+              label="违章时间"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
-              {getFieldDecorator('code', {
-                  rules: [{
-                    required: true,
-                    message: '请输入code',
-                  }],
-                })(
+              {getFieldDecorator('violationtime', {
+                rules: [{
+                  required: true,
+                  message: '请选择违章时间',
+                }],
+              })(
 
-                  <Input placeholder="请输入code" />
-                )}
+                <DatePicker style={{width: '256px'}} />
+              )}
             </FormItem>
+            <FormItem
+              label="车牌号"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('license', {
+                rules: [{
+                  required: true,
+                  message: '请输入车牌号',
+                }],
+              })(
+
+                <Input placeholder="请输入车牌号" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="违章地点"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('address', {
+                rules: [{
+                  required: true,
+                  message: '请输入违章地点',
+                }],
+              })(
+
+                <Input placeholder="请输入违章地点" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="监控编号"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('monitorid', {
+                rules: [{
+                  required: true,
+                  message: '请输入监控编号',
+                }],
+              })(
+
+                <Input placeholder="请输入监控编号" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="罚款金额"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('fineamount', {
+                rules: [{
+                  required: true,
+                  message: '请输入罚款金额',
+                }],
+              })(
+
+                <Input placeholder="请输入罚款金额" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="违章扣分"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('deductpoints', {
+                rules: [{
+                  required: true,
+                  message: '请输入违章扣分',
+                }],
+              })(
+
+                <Input placeholder="请输入违章扣分" />
+              )}
+            </FormItem>
+
+            <FormItem
+              label="处理状态"
+              labelCol={{ span: 5 }}
+              wrapperCol={{ span: 15 }}
+            >
+              {getFieldDecorator('status', {
+                rules: [{
+                  required: true,
+                  message: '请选择处理状态',
+                }],
+              })(
+                <Select
+                  showSearch={true}
+                  placeholder="请选择用户名"
+                  optionFilterProp="children"
+                >
+                  <Option key="0">未处理</Option>
+                  <Option key="2">已处理</Option>
+                </Select>
+              )}
+            </FormItem>
+
           </Form>
           <div style={{ float: 'right', marginRight: '8%', marginTop: 20 }}>
             <Button

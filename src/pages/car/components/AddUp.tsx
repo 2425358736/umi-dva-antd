@@ -41,7 +41,7 @@ class AddUp extends React.Component {
     this.props.form.resetFields()
     if (this.props.record.id > 0) {
       this.setState({
-        color: this.props.color,
+        color: this.props.record.color,
       })
       let brand = []
       brand = [this.props.record.brand, this.props.record.lineno, this.props.record.yearno, this.props.record.model]
@@ -175,7 +175,7 @@ class AddUp extends React.Component {
             </FormItem>
 
             <FormItem
-              label="品牌->车系->年代->型号"
+              label="品牌,车系,年代,型号"
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
@@ -243,7 +243,7 @@ class AddUp extends React.Component {
                 }],
               })(
 
-                <DatePicker style={{width: '367px'}} />
+                <DatePicker style={{width: '421px'}} />
               )}
             </FormItem>
 
@@ -259,7 +259,7 @@ class AddUp extends React.Component {
                 }],
               })(
 
-                <DatePicker style={{width: '367px'}} />
+                <DatePicker style={{width: '421px'}} />
               )}
             </FormItem>
 
@@ -275,7 +275,7 @@ class AddUp extends React.Component {
                 }],
               })(
 
-                <DatePicker style={{width: '367px'}} />
+                <DatePicker style={{width: '421px'}} />
               )}
             </FormItem>
 
@@ -291,7 +291,7 @@ class AddUp extends React.Component {
                 }],
               })(
 
-                <DatePicker style={{width: '367px'}} />
+                <DatePicker style={{width: '421px'}} />
               )}
             </FormItem>
 
@@ -382,7 +382,7 @@ class AddUp extends React.Component {
                 }],
               })(
 
-                <DatePicker style={{width: '367px'}} />
+                <DatePicker style={{width: '421px'}} />
               )}
             </FormItem>
           </Form>
