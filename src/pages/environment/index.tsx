@@ -1,7 +1,7 @@
 // 列表
 import React from 'react'
-import { message, Table, Input, Button, Popconfirm, Modal, Icon } from 'antd'
-import { getRequest, deleteRequest } from '../../utils/api'
+import { Table, Input, Button, Modal, Icon, Drawer } from 'antd'
+import { getRequest } from '../../utils/api'
 import Screen from '../../components/Screen/Screen'
 import AddUp from './components/AddUp'
 const styles = require('./index.less')
@@ -56,6 +56,7 @@ class Index extends React.Component {
       },
       loading: false,
       open: false,
+      openInfo: false,
     }
   }
   componentDidMount = async () => {
@@ -95,6 +96,7 @@ class Index extends React.Component {
     }
     this.setState({
       open: false,
+      openInfo: false,
       record: {},
     })
   }
@@ -110,6 +112,18 @@ class Index extends React.Component {
           title: '站点名称',
           width: 150,
           dataIndex: 'name',
+          render(text, record) {
+            return (
+              <div>
+                <a onClick={() => {
+                  that.setState({
+                    openInfo: true,
+                    record: record
+                  })
+                }}>{text}</a>
+              </div>
+            )
+          },
         },
         {
           title: '地址',
@@ -293,6 +307,19 @@ class Index extends React.Component {
           loading={this.state.loading}
           onChange={this.handleTableChange}
         />
+
+        <Drawer
+          title="站点信息"
+          placement="right"
+          closable={false}
+          width={700}
+          onClose={() => {this.setState({openInfo: false})}}
+          visible={this.state.openInfo}
+        >
+          <p>站点信息...</p>
+          <p>站点信息...</p>
+          <p>站点信息...</p>
+        </Drawer>
       </div>
     )
   }

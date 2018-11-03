@@ -118,7 +118,7 @@ class Index extends React.Component {
                 <a onClick={() => {
                   that.setState({
                     openCar: true,
-                    id: record.id
+                    record: record
                   })
                 }}>{text}</a>
               </div>

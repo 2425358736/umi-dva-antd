@@ -24,11 +24,13 @@ class AddUp extends React.Component {
       buttonLoading: false,
       latitude: 30.53786,
       longitude: 104.07265,
+      bool: false,
     }
   }
 
   componentDidMount() {
       this.initialization()
+      setTimeout(() => {this.setState({bool: true})}, 500)
   }
   /**
    * 初始化方法
@@ -102,14 +104,6 @@ class AddUp extends React.Component {
   handleCancel = () => {
     this.props.callback({ type: 'cancel' })
   }
-
-  MyMapComponent = (props) =>
-    <GoogleMap
-      defaultZoom={8}
-      defaultCenter={{ lat: -34.397, lng: 150.644 }}
-    >
-      {props.isMarkerShown && <Marker position={{ lat: -34.397, lng: 150.644 }} />}
-    </GoogleMap>
 
   render() {
       const { getFieldDecorator } = this.props.form
@@ -200,6 +194,7 @@ class AddUp extends React.Component {
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
+              {this.state.bool && (
               <ReactQMap
                 center={{latitude: this.state.latitude, longitude: this.state.longitude}}
                 mySpot={{latitude: this.state.latitude, longitude: this.state.longitude}}
@@ -207,7 +202,6 @@ class AddUp extends React.Component {
                 apiKey="UEXBZ-BOMLW-2XART-OJ322-X52T3-BQBXD"
                 style={{height: 300}}
                 getMap = {(map, maps) => {
-                  debugger
                   maps.event.addListener(map, 'click', function(event) {
                     that.setState({
                       latitude: event.latLng.getLat(),
@@ -216,6 +210,7 @@ class AddUp extends React.Component {
                   })
                 }}
               />
+              )}
             </FormItem>
           </Form>
           <div style={{ float: 'right', marginRight: '8%', marginTop: 20 }}>
