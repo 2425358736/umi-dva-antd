@@ -5,6 +5,7 @@ import { getRequest, postFormDateRequest } from '../../utils/api'
 import Screen from '../../components/Screen/Screen'
 import AddUp from './components/AddUp'
 import Info from './components/Info'
+import Playback from './components/Playback'
 const styles = require('./index.less')
 
 class Index extends React.Component {
@@ -58,6 +59,7 @@ class Index extends React.Component {
       loading: false,
       open: false,
       openCar: false,
+      openPlayback: false,
     }
   }
   componentDidMount = async () => {
@@ -169,7 +171,8 @@ class Index extends React.Component {
             return (
               <div>
                 <a onClick={() => that.edit(record)}>编辑</a>
-                <a style={{marginLeft: '20px'}} >轨迹回放</a>
+                <a onClick={() => that.setState({openPlayback: true, record: record})}
+                   style={{marginLeft: '20px'}} >轨迹回放</a>
                 <Popconfirm title="确定删除吗?" onConfirm={() => that.delete(record.id)}>
                   <a style={{marginLeft: '20px'}}>删除</a>
                 </Popconfirm>
@@ -347,6 +350,20 @@ class Index extends React.Component {
           destroyOnClose={true}
         >
           <Info
+            record={this.state.record}
+          />
+        </Drawer>
+
+        <Drawer
+          title="轨迹回放"
+          placement="right"
+          closable={false}
+          width={900}
+          onClose={() => {this.setState({openPlayback: false})}}
+          visible={this.state.openPlayback}
+          destroyOnClose={true}
+        >
+          <Playback
             record={this.state.record}
           />
         </Drawer>
