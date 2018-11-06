@@ -1,8 +1,8 @@
 // 详情
 import React from 'react'
 import ReactQMap from 'react-qmap'
-import { Button, DatePicker } from 'antd'
-import { postRequest } from 'utils/api'
+import { Button, DatePicker, message } from 'antd'
+import { getRequest } from 'utils/api'
 
 let mapTx
 class Playback extends React.Component {
@@ -26,29 +26,35 @@ class Playback extends React.Component {
     },         500)
   }
   search = async () => {
-    const json = {}
-    json.id = this.props.record.id
-    json.startDate = this.state.startDate
-    json.endDate = this.state.endDate
-    console.log(json)
-    const path = [
-      new window.qq.maps.LatLng(39.90799, 116.39939),
-      new window.qq.maps.LatLng(39.90794, 116.39756),
-      new window.qq.maps.LatLng(39.90862, 116.39752)
-    ]
-    await this.setState({
-      path: path,
-      center: {latitude: 39.90799, longitude: 116.39939}
-    })
-    const pol = new window.qq.maps.Polyline({
-      path: path,
-      strokeColor: '#000000',
-      strokeWeight: 5,
-      editable: false,
-      strokeDashStyle: 'dash',
-      strokeWeight: 2,
-      map: mapTx
-    })
+    if (this.state.startDate.length > 0 && this.state.endDate.length > 0 ) {
+      const data = await getRequest('/api-biz/vehicle/trackme?vehicleid='
+        + this.props.record.id + '&starttime=' + this.state.startDate + '&endtime=' + this.state.endDate)
+      const path = []
+      if (data.data && data.data.length > 0) {
+        data.data.forEach((json) => {
+          path.push(new window.qq.maps.LatLng(parseFloat(json.latitude ? json.latitude : 0),
+                                              parseFloat(json.longtitude ? json.longtitude : 0)))
+        })
+        await this.setState({
+          path: path,
+          center: {
+            latitude: parseFloat(data.data[0].latitude ? data.data[0].latitude : 0),
+            longitude: parseFloat(data.data[0].longtitude ? data.data[0].longtitude : 0)
+          }
+        })
+      }
+      const pol = new window.qq.maps.Polyline({
+        path: path,
+        strokeColor: '#000000',
+        strokeWeight: 5,
+        editable: false,
+        strokeDashStyle: 'dash',
+        strokeWeight: 2,
+        map: mapTx
+      })
+    } else {
+      message.success('请选择日期')
+    }
   }
 
   onChangeStart = (value, dateString) => {
