@@ -6,7 +6,7 @@
  * @Description: 订单 - 页面
  */
 import React from 'react'
-import { Table, Input, Button, Drawer, Modal, Icon } from 'antd'
+import { Table, Input, Button, Drawer, Modal, Divider, Icon, Card, Col, Row } from 'antd'
 import { getRequest } from '../../utils/api'
 import Screen from '../../components/Screen/Screen'
 import AddUp from './components/AddUp'
@@ -66,12 +66,21 @@ class Index extends React.Component {
       openUser: false,
       openOrder: false,
       openCar: false,
+      statisticalData: {},
 
     }
   }
   componentDidMount = async () => {
+    this.getStatisticalData()
     this.columnsUp()
     this.fetch({ pagination: {}, filters: {} })
+  }
+
+  getStatisticalData = async () => {
+    const statisticalData = await getRequest('/api-biz/orders/getOrderStat')
+    this.setState({
+      statisticalData: statisticalData.data
+    })
   }
 
   /**
@@ -316,6 +325,63 @@ class Index extends React.Component {
     const that = this
     return (
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
+        <div style={{ background: '#ECECEC', padding: '10px', marginBottom: '10px' }}>
+          <Row gutter={16}>
+            <Col span={8}>
+              <Card title="累计订单"
+                    bodyStyle={{ display: 'none' }}
+                    actions={[
+                      <span key={1}>金额(元)<br/>
+                        {this.state.statisticalData.totalamt ? this.state.statisticalData.totalamt : 0}
+                      </span>,
+                      <span key={2}>里程(km)<br/>{this.state.statisticalData.totaldistance ?
+                        this.state.statisticalData.totaldistance : 0}</span>,
+                      <span key={3}>时长(h)<br/>{this.state.statisticalData.totalduration ?
+                        this.state.statisticalData.totalduration : 0}</span>
+                    ]}
+              />
+            </Col>
+            <Col span={8}>
+              <Card title="订单时间"
+                    bodyStyle={{ display: 'none' }}
+                    actions={[
+                      <span key={4}>全部<br/>{this.state.statisticalData.totalcount}</span>,
+                      <span key={5}>今天<br/>{this.state.statisticalData.daycount}</span>,
+                      <span key={6}>本周<br/>{this.state.statisticalData.weekcount}</span>,
+                      <span key={7}>本月<br/>{this.state.statisticalData.monthcount}</span>
+                    ]}
+              />
+            </Col>
+            <Col span={8}>
+              <Card title="订单金额"
+                    bodyStyle={{ display: 'none' }}
+                    actions={[
+                      <span key={8}>0至20元<br/>{this.state.statisticalData.less20 ?
+                        this.state.statisticalData.less20 : 0}</span>,
+                      <span key={9}>20至50元<br/>{this.state.statisticalData.bet20_50 ?
+                        this.state.statisticalData.bet20_50 : 0}</span>,
+                      <span key={10}>50至100元<br/>{this.state.statisticalData.bet50_100 ?
+                        this.state.statisticalData.bet50_100 : 0}</span>,
+                      <span key={11}>100元以上<br/>{this.state.statisticalData.above100 ?
+                        this.state.statisticalData.above100 : 0}</span>
+                    ]}
+              />
+            </Col>
+            <Col span={8}>
+              <Card title="订单里程"
+                    bodyStyle={{ display: 'none' }}
+                    actions={[
+                      <span key={12}>10km以下<br/>{this.state.statisticalData.less10 ?
+                        this.state.statisticalData.less10 : 0}</span>,
+                      <span key={13}>10至30km<br/>{this.state.statisticalData.bet10_30 ?
+                        this.state.statisticalData.bet10_30 : 0}</span>,
+                      <span key={14}>30km以上<br/>{this.state.statisticalData.above30 ?
+                        this.state.statisticalData.above30 : 0}</span>
+                    ]}
+              />
+            </Col>
+          </Row>
+        </div>
         <div>
           <Input prefix={<Icon type="search" />}
                  placeholder="搜索识别码"
