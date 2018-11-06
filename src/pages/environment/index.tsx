@@ -219,7 +219,7 @@ class Index extends React.Component {
     if (paramsOne.pagination.current === null
       || typeof paramsOne.pagination.current === 'undefined' || paramsOne.pagination.current === '') {
       paramsOne.pagination.current = 0
-      paramsOne.pagination.pageSize = 15
+      paramsOne.pagination.pageSize = 10
     }
     this.setState({ loading: true })
     const data = await getRequest('/api-biz/station/list?page='
