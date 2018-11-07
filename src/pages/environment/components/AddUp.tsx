@@ -3,6 +3,7 @@ import React from 'react'
 import { Button, Input, Form, message } from 'antd'
 import ReactQMap from 'react-qmap'
 import { postRequest } from '../../../utils/api'
+import UploadImg from '../../../components/Upload/UploadImg'
 
 const styles = require('../index.less')
 
@@ -25,6 +26,7 @@ class AddUp extends React.Component {
       latitude: 30.53786,
       longitude: 104.07265,
       bool: false,
+      imgurl: null,
     }
   }
 
@@ -32,6 +34,15 @@ class AddUp extends React.Component {
       this.initialization()
       setTimeout(() => {this.setState({bool: true})}, 500)
   }
+
+  componentWillMount() {
+    if (this.props.record.id > 0) {
+      this.setState({
+        imgurl: this.props.record.imgurl,
+      })
+    }
+  }
+
   /**
    * 初始化方法
    * @returns {Promise<void>}
@@ -42,13 +53,13 @@ class AddUp extends React.Component {
       this.setState({
         latitude: this.props.record.latitude,
         longitude: this.props.record.longtitude,
+        imgurl: this.props.record.imgurl,
       })
       this.props.form.setFieldsValue({
         name: this.props.record.name,
         address: this.props.record.address,
         parkno: this.props.record.parkno,
         carno: this.props.record.carno,
-        imgurl: this.props.record.imgurl,
       })
     }
   }
@@ -73,8 +84,9 @@ class AddUp extends React.Component {
           buttonLoading: true,
         })
         const json = this.props.form.getFieldsValue()
-        json.longtitude = this.state.longitude.toFixed(5)
-        json.latitude = this.state.latitude.toFixed(5)
+        json.longtitude = this.state.longitude
+        json.latitude = this.state.latitude
+        json.imgurl = this.state.imgurl
         let data
         if (this.props.record.id > 0) {
           json.id = this.props.record.id
@@ -178,15 +190,14 @@ class AddUp extends React.Component {
               labelCol={{ span: 5 }}
               wrapperCol={{ span: 15 }}
             >
-              {getFieldDecorator('imgurl', {
-                rules: [{
-                  required: true,
-                  message: '请输入图标',
-                }],
-              })(
-
-                <Input placeholder="请输入图标" />
-              )}
+                <UploadImg
+                  fileList={this.state.imgurl}
+                  callback={(imgurl) => {
+                    this.setState({
+                      imgurl: imgurl
+                    })
+                  }}
+                />
             </FormItem>
 
             <FormItem

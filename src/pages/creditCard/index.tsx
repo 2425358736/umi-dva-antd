@@ -54,12 +54,12 @@ class Index extends React.Component {
       params: {
         pagination: {},
         filters: {
-          allowcode: '',
+          username: '',
         },
         sorter: {},
       },
       screenItem: {
-        allowcode: '',
+        username: '',
       },
       loading: false,
       open: false,
@@ -89,7 +89,7 @@ class Index extends React.Component {
    */
   onChangeCustomerName = (e) => {
     const screenItemOne = this.state.screenItem
-    screenItemOne.allowcode = e.target.value
+    screenItemOne.username = e.target.value
     this.setState({
       screenItem: screenItemOne,
     })
@@ -290,7 +290,8 @@ class Index extends React.Component {
     }
     this.setState({ loading: true })
     const data = await getRequest('/api-biz/orders/list?page='
-      + paramsOne.pagination.current + '&limit=' + paramsOne.pagination.pageSize)
+      + paramsOne.pagination.current + '&limit=' + paramsOne.pagination.pageSize
+      + '&username=' + paramsOne.filters.username)
     const paginationOne = this.state.pagination
     paginationOne.total = data.count
     this.setState({
@@ -384,9 +385,9 @@ class Index extends React.Component {
         </div>
         <div>
           <Input prefix={<Icon type="search" />}
-                 placeholder="搜索识别码"
+                 placeholder="搜索用户名"
                  style={{ width: 280, marginLeft: '10px' }}
-                 value={this.state.screenItem.allowcode}
+                 value={this.state.screenItem.username}
                  onChange={this.onChangeCustomerName}
                  onPressEnter={this.handleSearch}
           />

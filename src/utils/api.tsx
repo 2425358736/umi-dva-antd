@@ -42,6 +42,25 @@ export function postRequest(url, params) {
   })
 }
 
+export function putRequest(url, params) {
+  return new Promise((resolve, reject) => {
+    request(http + url, {
+      method: 'PUT',
+      body: params,
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('Authorization')
+      }
+    }).then(
+      (response) => {
+        const resultData = response
+        resolve(resultData)
+      }
+    ).catch((error) => {
+      reject(error)
+    })
+  })
+}
+
 export function deleteRequest(url, params) {
   return new Promise((resolve, reject) => {
     request(http + url, {
