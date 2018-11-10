@@ -7,6 +7,7 @@ import enUS from 'antd/lib/locale-provider/en_US'
 import MenuList from './MenuList'
 import GlobalHeader from  '../components/GlobalHeader'
 import { getRequest } from '../utils/api'
+import router from 'umi/router'
 
 const { Header, Sider, Content } = Layout
 
@@ -43,7 +44,7 @@ class Root extends React.Component<Props, {}> {
             collapsible={true}
             collapsed={this.state.collapsed}
           >
-              <a><div className={styles.logo} onClick={() => {window.location.href = '/'}} /></a>
+              <a><div className={styles.logo} onClick={() => {router.push('/')}} /></a>
             <MenuList />
           </Sider>
           <Layout>

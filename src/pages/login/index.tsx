@@ -3,6 +3,7 @@ import { Alert, Tooltip, Icon, message } from 'antd'
 import { Login } from 'ant-design-pro'
 const styles = require('./Login.less')
 import { postFormDateRequest } from '../../utils/api'
+import router from 'umi/router'
 
 const { UserName, Password, Submit } = Login
 
@@ -28,7 +29,7 @@ class LoginPage extends Component {
       const Authorization = data.access_token
       localStorage.setItem('Authorization', Authorization)
 
-      window.location.href = '/'
+      router.push('/')
     }
   }
   render() {

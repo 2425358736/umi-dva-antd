@@ -1,5 +1,6 @@
 import fetch from 'dva/fetch'
 import { notification } from 'antd'
+import router from 'umi/router'
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -80,19 +81,19 @@ export default function request(url, options) {
     .catch((e) => {
       const status = e.name
       if (status === 401) {
-        window.location.href = '/error/401'
+        router.push('/error/401')
       }
       if (status === 403) {
-        window.location.href = '/error/403'
+        router.push('/error/403')
       }
       if (status <= 504 && status >= 500) {
-        window.location.href = '/error/500'
+        router.push('/error/500')
       }
       if (status >= 404 && status < 422) {
-        window.location.href = '/error/404'
+        router.push('/error/404')
       }
       if (status === 'TypeError') {
-        window.location.href = '/login'
+        router.push('/login')
       }
     })
 }
