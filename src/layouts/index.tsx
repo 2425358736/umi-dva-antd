@@ -6,7 +6,7 @@ import zhCN from 'antd/lib/locale-provider/zh_CN'
 import enUS from 'antd/lib/locale-provider/en_US'
 import MenuList from './MenuList'
 import GlobalHeader from  '../components/GlobalHeader'
-import { getRequest } from '../utils/api'
+import { postRequest } from '../utils/api'
 import router from 'umi/router'
 
 const { Header, Sider, Content } = Layout
@@ -29,9 +29,9 @@ class Root extends React.Component<Props, {}> {
     })
   }
   componentDidMount = async () => {
-    const currentUser = await getRequest('/api-user/users/current')
+    const currentUser = await postRequest('/system/getUserName')
     this.setState({
-      currentUser
+      currentUser: currentUser.data
     })
   }
 

@@ -42,7 +42,7 @@ function checkStatus(response: {status, statusText, url}) {
  */
 export default function request(url, options) {
   const defaultOptions = {
-    // credentials: 'include',
+    credentials: 'include',
   }
   let newOptions = { ...defaultOptions, ...options }
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
@@ -52,6 +52,7 @@ export default function request(url, options) {
           method: newOptions.method,
           headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...newOptions.headers},
           body: newOptions.body
+
         }
       } else {
         newOptions.headers = {
@@ -73,9 +74,6 @@ export default function request(url, options) {
   return fetch(url, newOptions)
     .then(checkStatus)
     .then((response) => {
-      // if (newOptions.method === 'DELETE' || response.status === 204) {
-      //   return response.text()
-      // }
       return response.json()
     })
     .catch((e) => {

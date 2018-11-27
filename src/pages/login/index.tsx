@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Alert, Tooltip, Icon, message } from 'antd'
 import { Login } from 'ant-design-pro'
 const styles = require('./Login.less')
-import { postFormDateRequest } from '../../utils/api'
+import { postRequest } from '../../utils/api'
 import router from 'umi/router'
 
 const { UserName, Password, Submit } = Login
@@ -18,18 +18,15 @@ class LoginPage extends Component {
 
   handleSubmit = async (err, values) => {
     if (!err) {
-      values.grant_type = 'password'
-      values.client_id = 'webApp'
-      values.client_secret = 'webApp'
-
-      const data = await postFormDateRequest(
-        '/api-auth/oauth/token',
+      const data = await postRequest(
+        '/system/verificationUser',
         values
       )
-      const Authorization = data.access_token
-      localStorage.setItem('Authorization', Authorization)
-
-      router.push('/')
+      if (data.code === 0) {
+        router.push('/')
+      } else {
+        message.error(data.message)
+      }
     }
   }
   render() {
@@ -47,14 +44,14 @@ class LoginPage extends Component {
             <UserName
               prefix={<Icon type="user" style={{ color: 'rgba(0, 0, 0, .25)', fontSize: '20px' }} />}
               className={styles.inputDom}
-              name="username"
+              name="loginName"
               placeholder="请输入用户名"
             />
             <Password
               prefix={<Icon type="lock"
                             style={{ color: 'rgba(0, 0, 0, .25)', fontSize: '20px' }} />}
               className={styles.inputDom}
-              name="password"
+              name="passWord"
               placeholder="请输入密码"
             />
           </div>

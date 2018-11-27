@@ -68,11 +68,11 @@ export default class GlobalHeader extends PureComponent {
               <Icon type="question-circle-o" />
             </a>
           </Tooltip>
-          {currentUser.username ? (
+          {currentUser.loginName ? (
             <Dropdown overlay={menu}>
               <span className={`${styles.action} ${styles.account}`}>
-                <Avatar size="small" className={styles.avatar} src={currentUser.headImgUrl} />
-                <span className={styles.name}>{currentUser.username}</span>
+                <Avatar size="small" className={styles.avatar} src={currentUser.loginName} />
+                <span className={styles.name}>{currentUser.loginName}</span>
               </span>
             </Dropdown>
           ) : (

@@ -1,170 +1,201 @@
 // 列表
 import React from 'react'
-import { message, Table, Input, Button, Popconfirm, Modal, Icon } from 'antd'
-import { getRequest, deleteRequest } from '../../../utils/api'
+import { message, Table, Input, Button, Icon, Divider, Popconfirm, Modal, Drawer } from 'antd'
+import { postRequest, jsonString, exportExcel } from 'utils/api'
 import Screen from '../../../components/Screen/Screen'
-import AddUp from './components/AddUp'
-import SetRole from './components/SetRole'
 const styles = require('./index.less')
+import AddUp from './components/AddUp'
+import Info from './components/Info'
 
-class Index extends React.Component {
+let switch1 = true
+class SysUser extends React.Component {
   constructor(props) {
     super(props)
-    /**
-     *
-     * @type
-     * {
-     *  {
-     *    record: {};  当前变更的对象
-     *    columns: Array;  列表头部配置
-     *    dataSource: Array;  数据源
-     *    pagination: {  分页组件参数
-     *      showSizeChanger: boolean; 是否可以改变 pageSize
-     *      showQuickJumper: boolean; 是否可以快速跳转至某页
-     *      pageSizeOptions: [string , string , string , string]; 指定每页可以显示多少条
-     *      defaultPageSize: number 默认的每页条数
-     *    };
-     *    params: { 后端交互参数集合
-     *      pagination: {}; 分页参数
-     *      filters: {}; 查询参数
-     *      sorter: {} 排序参数
-     *    };
-     *    screenItem: {}; 搜索框参数
-     *    loading: boolean; 加载等待
-     *    open: boolean Modal打开组件
-     *   }
-     * }
-     */
     this.state = {
-      record: {},
+      department: [],
+      roleArr: [],
       columns: [],
       dataSource: [],
       pagination: {
         showSizeChanger: true,
         showQuickJumper: true,
-        pageSizeOptions: ['10', '15', '30', '45'],
-        defaultPageSize: 10,
+        pageSizeOptions: ['15', '30', '45'],
+        defaultPageSize: 15,
       },
       params: {
         pagination: {},
         filters: {
-          username: '',
+          loginName: '',
         },
         sorter: {},
       },
       screenItem: {
-        username: '',
+        loginName: '',
       },
       loading: false,
+      id: 0,
       open: false,
-      openRole: false,
+      openInfo: false,
     }
   }
+
   componentDidMount = async () => {
+    const departmentList = await postRequest('/system/departmentListAll')
+    let roleArr = await postRequest('/system/roleList')
+    roleArr = roleArr.data.list
+    roleArr.forEach(role => {
+      role.text = role.roleName
+      role.value = role.id
+    })
+    this.setState({
+      roleArr,
+      department: departmentList.data,
+    })
     this.columnsUp()
     this.fetch({ pagination: {}, filters: {} })
   }
 
   /**
-   * 更新搜索框
+   * 更新输入框搜索
    * @param e
    */
-  onChangeCustomerName = (e) => {
+  onChangeCustomerName = e => {
     const screenItemOne = this.state.screenItem
-    screenItemOne.username = e.target.value
+    screenItemOne.loginName = e.target.value
     this.setState({
       screenItem: screenItemOne,
     })
   }
 
   /**
-   * 添加编辑后回调刷新
+   * 添加后回调刷新
    * @param json
    */
-  getContractInfo = (json) => {
-    if (json.type === 'submit' && !this.state.record.id) {
+  getContractInfo = json => {
+    switch1 = true
+    if (json.type === 'submit' && this.state.id === 0) {
       const filters = JSON.parse(JSON.stringify(this.state.params.filters))
       for (const key in filters) {
         if (filters[key] !== null) {
           filters[key] = null
         }
       }
-      this.handleTableChange({},
-                             filters, {})
-    } else if (json.type === 'submit' && this.state.record.id > 0) {
-      this.handleTableChange(this.state.params.pagination,
-                             this.state.params.filters, this.state.params.sorter)
+      this.handleTableChange({}, filters, {})
+    } else if (json.type === 'submit' && this.state.id > 0) {
+      this.handleTableChange(
+        this.state.params.pagination,
+        this.state.params.filters,
+        this.state.params.sorter
+      )
     }
     this.setState({
       open: false,
-      openRole: false,
-      record: {},
+      id: 0,
     })
   }
+
   /**
    * 更新表头
    * @returns {*}
    */
   columnsUp = () => {
     const that = this
-    that.setState({
+    this.setState({
       columns: [
         {
-          title: '用户名',
-          width: 150,
-          dataIndex: 'username',
-        },
-        {
-          title: '性别',
+          title: '序号',
           width: 100,
-          dataIndex: 'sex',
-          render(text) {
-            return text === 0 ? '男' : '女'
+          dataIndex: 'id',
+          column: 'id',
+          render(text, record, index) {
+            let page =
+              (that.state.params.pagination.current - 1) * that.state.params.pagination.pageSize
+            if (isNaN(page)) {
+              page = 0
+            }
+            return <span>{page + index + 1}</span>
           },
         },
         {
-          title: '昵称',
+          title: '所属部门',
           width: 150,
-          dataIndex: 'nickname',
+          column: 'departmentName',
+          dataIndex: 'departmentName',
+        },
+        {
+          title: '工号',
+          width: 100,
+          column: 'jobNum',
+          dataIndex: 'jobNum',
+          sorter: true,
+        },
+        {
+          title: '用户名',
+          width: 100,
+          column: 'loginName',
+          dataIndex: 'loginName',
+        },
+        {
+          title: '所属角色',
+          width: 150,
+          column: 'roleName',
+          dataIndex: 'roleId',
+          filters: this.state.roleArr,
+          filteredValue: that.state.params.filters.roleId || null,
+          render(text, record) {
+            return record.roleName
+          },
         },
         {
           title: '手机',
           width: 150,
+          column: 'phone',
           dataIndex: 'phone',
         },
         {
-          title: '头像',
-          width: 150,
-          dataIndex: 'headImgUrl',
-          render(text) {
-            return <img src={text} height="100" width="100" />
-          },
-        },
-        {
-          title: '创建时间',
+          title: '备注',
           width: 200,
-          dataIndex: 'createTime',
-        },
-        {
-          title: '是否启用',
-          width: 150,
-          dataIndex: 'enabled',
-          render(text) {
-            return text ? '启用' : '停用'
-          },
+          column: 'remark',
+          dataIndex: 'remark',
         },
         {
           title: '操作',
-          width: 350,
+          width: 200,
           dataIndex: 'opt',
           render(text, record) {
             return (
               <div>
-                <a onClick={() => that.edit(record)}>编辑</a>
-                <Popconfirm title="确定删除吗?" onConfirm={() => that.delete(record.id)}>
-                  <a style={{marginLeft: '20px'}}>删除</a>
+                <a onClick={() => that.edit(record.id)}>编辑</a>
+                <Divider type="vertical" />
+                <Popconfirm
+                  title="此操作将重置密码为123456，是否继续?"
+                  onConfirm={() => {
+                    that.reset(record.id)
+                  }}
+                >
+                  <a
+                    onClick={() => {
+                      switch1 = false
+                    }}
+                  >
+                    重置密码
+                  </a>
                 </Popconfirm>
-                <a style={{marginLeft: '20px'}} onClick={() => that.setRole(record)} >角色</a>
+                <Divider type="vertical" />
+                <Popconfirm
+                  title="确定删除吗?"
+                  onConfirm={() => {
+                    that.deleteDepartment(record.id)
+                  }}
+                >
+                  <a
+                    onClick={() => {
+                      switch1 = false
+                    }}
+                  >
+                    删除
+                  </a>
+                </Popconfirm>
               </div>
             )
           },
@@ -173,36 +204,35 @@ class Index extends React.Component {
     })
   }
 
-  /**
-   * 设置角色
-   * @param record
-   * @returns {Promise<void>}
-   */
-  setRole = async (record) => {
-    this.setState({
-      openRole: true,
-      record,
-    })
-  }
-  /**
-   * 编辑
-   * @param record 编辑的对象
-   * @returns {Promise<void>}
-   */
-  edit = async (record) => {
+  // 修改
+  edit = async id => {
+    switch1 = false
     this.setState({
       open: true,
-      record,
+      id,
     })
   }
-  /**
-   * @param id 删除的id
-   * @returns {Promise<void>}
-   */
-  delete = async (id) => {
-    const data = await getRequest('/api-user/users/updateEnabled?id=' + id + 'enabled=false')
-    this.getContractInfo({type: 'submit'})
-    message.success(data.resp_msg)
+
+  reset = async id => {
+    const data = await postRequest('/system/updateUser', {
+      id,
+      passWord: '123456',
+    })
+    await this.setState({
+      id,
+    })
+    this.getContractInfo({ type: 'submit' })
+    message.success(data.message)
+  }
+
+  deleteDepartment = async id => {
+    switch1 = false
+    const data = await postRequest('/system/deleteSysUser', { id })
+    await this.setState({
+      id,
+    })
+    this.getContractInfo({ type: 'submit' })
+    message.success(data.message)
   }
 
   /**
@@ -211,9 +241,9 @@ class Index extends React.Component {
   handleSearch = () => {
     const paramsOne = this.state.params
     paramsOne.filters = Object.assign(paramsOne.filters, this.state.screenItem)
-    this.handleTableChange({},
-                           paramsOne.filters, paramsOne.sorter)
+    this.handleTableChange({}, paramsOne.filters, paramsOne.sorter)
   }
+
   /**
    * 分页触发
    * @param pagination
@@ -233,35 +263,43 @@ class Index extends React.Component {
       params,
     })
     this.columnsUp()
-    this.fetch({ pagination: Object.assign(params.pagination,
-                                           { field: sorter.field, order: sorter.order }),
-      filters: params.filters })
+    this.fetch({
+      pagination: Object.assign(params.pagination, { field: sorter.field, order: sorter.order }),
+      filters: params.filters,
+    })
   }
+
   /**
    * 请求数据
    * @param params
    * @returns {Promise.<void>}
    */
-  fetch = async (params) => {
+  fetch = async params => {
     const paramsOne = JSON.parse(JSON.stringify(params))
-    if (paramsOne.pagination.field === null
-      || typeof paramsOne.pagination.field === 'undefined' || paramsOne.pagination.field === '') {
+    jsonString(paramsOne.filters)
+    if (
+      paramsOne.pagination.field === null ||
+      typeof paramsOne.pagination.field === 'undefined' ||
+      paramsOne.pagination.field === ''
+    ) {
       paramsOne.pagination.field = 'a.id'
       paramsOne.pagination.order = 'desc'
     }
-    if (paramsOne.pagination.current === null
-      || typeof paramsOne.pagination.current === 'undefined' || paramsOne.pagination.current === '') {
+    if (
+      paramsOne.pagination.current === null ||
+      typeof paramsOne.pagination.current === 'undefined' ||
+      paramsOne.pagination.current === ''
+    ) {
       paramsOne.pagination.current = 0
-      paramsOne.pagination.pageSize = 10
+      paramsOne.pagination.pageSize = 15
     }
     this.setState({ loading: true })
-    const data = await getRequest('/api-user/users?page='
-      + paramsOne.pagination.current + '&limit=' + paramsOne.pagination.pageSize)
+    const data = await postRequest('/system/sysUserList', paramsOne)
     const paginationOne = this.state.pagination
-    paginationOne.total = data.count
+    paginationOne.total = data.data.total
     this.setState({
       loading: false,
-      dataSource: data.data,
+      dataSource: data.data.list,
       pagination: paginationOne,
     })
   }
@@ -269,8 +307,9 @@ class Index extends React.Component {
    * 筛选标签回调
    * @param filters
    */
-  callbackScreen = (filters) => {
+  callbackScreen = filters => {
     const screenItemOne = JSON.parse(JSON.stringify(this.state.screenItem))
+    /* eslint-disable */
     for (const key in filters) {
       if (key !== null) {
         for (const keyTwo in screenItemOne) {
@@ -292,25 +331,38 @@ class Index extends React.Component {
   addCustomer = () => {
     this.setState({
       open: true,
+      id: 0,
     })
   }
+
   render() {
     const that = this
     return (
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
         <div>
-          <Input prefix={<Icon type="search" />}
-                 placeholder="搜索用户名"
-                 style={{ width: 280, marginLeft: '10px' }}
-                 value={this.state.screenItem.username}
-                 onChange={this.onChangeCustomerName}
-                 onPressEnter={this.handleSearch}
+          <Button
+            onClick={() => {
+              exportExcel('/system/sysUserList', this.state.params, this.state.columns)
+            }}
+            style={{ backgroundColor: 'rgb(243, 243, 243)' }}
+          >
+            导出
+          </Button>
+          <Input
+            prefix={<Icon type="search" />}
+            placeholder="搜索用户名"
+            style={{ width: 280, marginLeft: '10px' }}
+            value={this.state.screenItem.loginName}
+            onChange={this.onChangeCustomerName}
+            onPressEnter={this.handleSearch}
           />
-          <Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>搜索</Button>
+          <Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>
+            搜索
+          </Button>
           <Modal
-            title={this.state.record.id > 0 ? '编辑用户' : '添加用户'}
+            title={this.state.id > 0 ? '编辑账号' : '添加账号'}
             style={{ top: 20 }}
-            width={600}
+            width={500}
             visible={this.state.open}
             footer={null}
             onCancel={() => this.getContractInfo({ type: 'cancel' })}
@@ -318,26 +370,17 @@ class Index extends React.Component {
           >
             <AddUp
               callback={this.getContractInfo}
-              record={this.state.record}
+              id={this.state.id}
+              department={this.state.department}
             />
           </Modal>
-
-          <Modal
-            title="设置角色"
-            style={{ top: 20 }}
-            width={800}
-            visible={this.state.openRole}
-            footer={null}
-            onCancel={() => this.getContractInfo({ type: 'cancel' })}
-            destroyOnClose={true}
+          <div
+            style={{ float: 'right', display: 'inline-block', cursor: 'pointer' }}
+            onClick={this.addCustomer}
           >
-            <SetRole
-              callback={this.getContractInfo}
-              record={this.state.record}
-            />
-          </Modal>
-          <div style={{ float: 'right', display: 'inline-block', cursor: 'pointer' }} onClick={this.addCustomer}>
-            <Button type="primary" style={{padding: '0 15px'}}>+ 添加用户</Button>
+            <Button type="primary" style={{ padding: '0 15px' }}>
+              + 添加账号
+            </Button>
           </div>
         </div>
         <Screen
@@ -348,16 +391,44 @@ class Index extends React.Component {
         <Table
           style={{ marginTop: '20px' }}
           rowKey="id"
-          scroll={{ x: 1500  }}
           columns={this.state.columns}
           dataSource={this.state.dataSource}
           pagination={this.state.pagination}
           loading={this.state.loading}
           onChange={this.handleTableChange}
+          onRow={record => {
+            return {
+              onClick: async () => {
+                if (switch1) {
+                  await that.setState({
+                    id: record.id,
+                  })
+                  this.setState({
+                    openInfo: true,
+                  })
+                }
+              },
+            }
+          }}
         />
+        <Drawer
+          title="账户详情"
+          placement="right"
+          width="800px"
+          closable={false}
+          onClose={() => {
+            this.setState({
+              openInfo: false,
+            })
+          }}
+          visible={this.state.openInfo}
+          destroyOnClose={true}
+        >
+          <Info id={this.state.id} />
+        </Drawer>
       </div>
     )
   }
 }
 
-export default Index
+export default SysUser

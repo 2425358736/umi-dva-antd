@@ -2,6 +2,7 @@ import React from 'react'
 import { Menu, Icon } from 'antd'
 import MenuJson from './MenuJson'
 import Link from 'umi/link'
+import { postRequest } from 'utils/api'
 
 const { SubMenu } = Menu
 
@@ -13,20 +14,22 @@ class MenuList extends React.Component<any, any> {
       openKeys: [],
       selectedKeys: [],
       url: url,
-      menuList: MenuJson
+      menuList: []
     }
   }
-  componentDidMount = () => {
+  componentDidMount = async () => {
     let list = []
     const key = []
-    const arr = JSON.parse(JSON.stringify(this.state.menuList))
+    const perList = await postRequest('/system/perList')
+    const arr = JSON.parse(JSON.stringify(perList.data))
     this.lookup(arr, list, key)
     if (key.length === 0) {
       list = []
     }
     this.setState({
       openKeys: list,
-      selectedKeys: key
+      selectedKeys: key,
+      menuList: perList.data
     })
   }
 
@@ -35,15 +38,18 @@ class MenuList extends React.Component<any, any> {
     let bol = true
     arr.forEach((json, i) => {
       if (bol) {
-        list.push(json.key.toString())
-        if (json.path === this.state.url) {
-          key.push(json.key.toString())
+        list.push(json.id.toString())
+        if (('/' + json.perUrl) === this.state.url) {
+          key.push(json.id.toString())
           bol = false
         } else if (typeof json.children !== 'undefined' && json.children.length > 0) {
           this.lookup(json.children, list, key)
-        } else if (i === arr.length - 1) {
+        } else if (typeof json.children === 'undefined' || json.children.length === 0) {
           list.splice(list.length - 1, 1)
-        } else if (typeof json.children === 'undefined') {
+          if (i === arr.length - 1) {
+            list.splice(list.length - 1, 1)
+          }
+        } else if (i === arr.length - 1) {
           list.splice(list.length - 1, 1)
         }
       }
@@ -52,21 +58,21 @@ class MenuList extends React.Component<any, any> {
 
   recursion = (children) => {
     return children.map(menu => {
-      if (menu.type === 0) {
+      if (menu.perType === 1) {
         return (
           <SubMenu
-            key={menu.key}
-            title={<span><Icon type={menu.icon} />{menu.name}</span>}>
+            key={menu.id}
+            title={<span><Icon type={menu.perImg} />{menu.perName}</span>}>
             {
               this.recursion(menu.children)
             }
           </SubMenu>
         )
-      } else if (menu.type === 1) {
+      } else if (menu.perType === 2) {
         return (
-          <Menu.Item key={menu.key}>
-            <Link to={menu.path}>
-              <span>{menu.name}</span>
+          <Menu.Item key={menu.id}>
+            <Link to={'/' + menu.perUrl}>
+              <span>{menu.perName}</span>
             </Link>
           </Menu.Item>
         )
@@ -76,6 +82,9 @@ class MenuList extends React.Component<any, any> {
     })
   }
   onOpenChange = (openKeys) => {
+    if (openKeys.length > 1) {
+      openKeys.splice(0, 1)
+    }
     this.setState({
       openKeys: openKeys
     })
@@ -96,22 +105,22 @@ class MenuList extends React.Component<any, any> {
         onSelect = {this.onSelect}
       >
         {this.state.menuList.map(menu => {
-          if (menu.type === 0) {
+          if (menu.perType === 1) {
             return (
               <SubMenu
-                key={menu.key}
-                title={<span><Icon type={menu.icon} /><span>{menu.name}</span></span>}>
+                key={menu.id}
+                title={<span><Icon type={menu.perImg} /><span>{menu.perName}</span></span>}>
                 {
                   this.recursion(menu.children)
                 }
               </SubMenu>
             )
-          } else if (menu.type === 1) {
+          } else if (menu.perType === 2) {
               return (
-                <Menu.Item key={menu.key}>
-                  <Link to={menu.path}>
-                    <Icon type={menu.icon} />
-                    <span>{menu.name}</span>
+                <Menu.Item key={menu.id}>
+                  <Link to={'/' + menu.perUrl}>
+                    <Icon type={menu.perImg} />
+                    <span>{menu.perName}</span>
                   </Link>
                 </Menu.Item>
               )

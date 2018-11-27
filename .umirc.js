@@ -61,7 +61,7 @@ export default {
         { path: '/gift', component: 'gift' },
         { path: '/heart', component: 'heart' },
         { path: '/user/role', component: 'user/role' },
-        { path: '/user/user', component: 'user/user' },
+        { path: '/sysuser', component: 'user/user' },
         { path: '/user/urisdiction', component: 'user/urisdiction' },
       ],
     },

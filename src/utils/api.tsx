@@ -1,21 +1,16 @@
-import { routerRedux } from 'dva/router'
 import request from '../utils/request'
+import router from 'umi/router'
 
-export const http: string = 'http://47.94.1.251:9200'
+export const http: string = 'http://localhost:8081'
 
 export function getRequest(url) {
   return new Promise((resolve, reject) => {
     request(http + url, {
       method: 'GET',
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('Authorization')
-      }
     }).then(
       (response) => {
         const resultData = response
         resolve(resultData)
-        // resolve(data)
-
       }
     ).catch((error) => {
       reject(error)
@@ -27,14 +22,21 @@ export function postRequest(url, params) {
   return new Promise((resolve, reject) => {
     request(http + url, {
       method: 'POST',
-      body: params,
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('Authorization')
+      body: {
+        ...params,
       }
     }).then(
       (response) => {
         const resultData = response
-        resolve(resultData)
+        if (typeof resultData !== 'undefined') {
+          if (resultData.code === 120) {
+            router.push('/login')
+          } else {
+            resolve(resultData)
+          }
+        } else {
+          resolve(resultData)
+        }
       }
     ).catch((error) => {
       reject(error)
@@ -46,9 +48,8 @@ export function putRequest(url, params) {
   return new Promise((resolve, reject) => {
     request(http + url, {
       method: 'PUT',
-      body: params,
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('Authorization')
+      body: {
+        ...params,
       }
     }).then(
       (response) => {
@@ -68,9 +69,6 @@ export function deleteRequest(url, params) {
       body: {
         ...params,
       },
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('Authorization')
-      }
     }).then(
       (response) => {
         const resultData = response
@@ -92,20 +90,125 @@ export function postFormDateRequest(url, params) {
   if (paramstr !== '') {
     paramstr = paramstr.substr(0, paramstr.length - 1)
   }
-  let headers = {}
-  if (url !== '/api-auth/oauth/token') {
-      headers = { Authorization: 'Bearer ' + localStorage.getItem('Authorization')}
-    }
   return new Promise((resolve, reject) => {
     request(http + url, {
       method: 'POST',
       body: paramstr,
-      headers: headers
     })
       .then(response => {
         const resultData = response
         if (typeof resultData !== 'undefined') {
           resolve(resultData)
+        } else {
+          resolve(resultData)
+        }
+      })
+      .catch(error => {
+        reject(error)
+      })
+  })
+}
+/**
+ * 导出export
+ */
+export async function exportExcel(url, params, list) {
+  const filters = JSON.parse(JSON.stringify(params.filters))
+  const pagination = JSON.parse(JSON.stringify(params.pagination))
+  const params1 = { filters, pagination }
+  const paramsOne = JSON.parse(JSON.stringify(params1))
+  jsonString(paramsOne.filters)
+  if (
+    paramsOne.pagination.field === null ||
+    typeof paramsOne.pagination.field === 'undefined' ||
+    paramsOne.pagination.field === ''
+  ) {
+    paramsOne.pagination.field = 'a.id'
+    paramsOne.pagination.order = 'desc'
+  }
+  paramsOne.pagination.current = 0
+  paramsOne.pagination.pageSize = 999999999
+  paramsOne.export = 'export'
+  const arr = []
+  list.forEach(json => {
+    const json2 = {}
+    json2.title = json.title
+    json2.column = json.column
+    json2.columnStr = json.columnStr
+    arr.push(json2)
+  })
+  paramsOne.export = arr
+  await post(url, paramsOne)
+  window.location.href = `${http}/upload/excel`
+}
+/* eslint-disable */
+/**
+ * 参数处理方法
+ * @param json
+ */
+export function jsonString(json) {
+  for (const key in json) {
+    if (Array.isArray(json[key])) {
+      if (key.indexOf('Date') >= 0) {
+        let arr = []
+        json[key].forEach(str => {
+          arr.push(moment(str).format('YYYY-MM-DD'))
+        })
+        json[key] = arr
+      } else {
+        let kg = false
+        json[key].forEach((json2, i) => {
+          if (typeof json2 === 'object') {
+            jsonString(json2)
+          } else if (typeof json2 !== 'undefined') {
+            json2 = json2.toString()
+            kg = true
+          }
+        })
+        if (kg) {
+          json[key] = json[key].toString()
+        }
+      }
+      if (json[key].length <= 0) {
+        json[key] = null
+      }
+    } else {
+      if (
+        json[key] !== null &&
+        typeof json[key] !== 'undefined' &&
+        typeof json[key] !== '' &&
+        key.indexOf('Date') >= 0
+      ) {
+        json[key] = moment(json[key]).format('YYYY-MM-DD')
+      }
+    }
+  }
+}
+function exportExcelGet(url, params) {
+  window.open(`${http}/upload/excel?list=${params}`)
+}
+export function post(url, params, headers) {
+  return new Promise((resolve, reject) => {
+    request(http + url, {
+      method: 'POST',
+      body: {
+        ...params,
+      },
+    })
+      .then(response => {
+        const resultData = response
+        if (typeof resultData !== 'undefined') {
+          if (resultData.code === 120) {
+            const { dispatch } = store
+            dispatch(routerRedux.push('/user/login'))
+          } else if (resultData.code === 500) {
+            const { dispatch } = store
+            dispatch(routerRedux.push('/exception/500'))
+          } else if (resultData.code === 403) {
+            const { dispatch } = store
+            dispatch(routerRedux.push('/exception/403'))
+          } else {
+            resolve(resultData)
+          }
         } else {
           resolve(resultData)
         }
