@@ -1,303 +1,334 @@
-// 列表
+// 系统设置 - 菜单管理
 import React from 'react'
-import { message, Table, Input, Button, Popconfirm, Modal, Icon } from 'antd'
-import { getRequest, deleteRequest } from '../../../utils/api'
-import Screen from '../../../components/Screen/Screen'
-import AddUp from './components/AddUp'
-const styles = require('./index.less')
+import { Tree, Button, Icon, Menu, Dropdown, Form, Input, Radio, message } from 'antd'
+import styled from 'styled-components'
+import styles from '../../../components/Less/List.less'
+import { postRequest } from '../../../utils/api'
 
-class Index extends React.Component {
+const FormItem = Form.Item
+const RadioGroup = Radio.Group
+
+const MenuContent = styled.div`
+    display: flex
+    height: 100%
+`
+
+const MenuBox = styled.div`
+  flex: 1;
+  border: 1px solid #333;
+  word-wrap: break-word;
+  overflow-y: scroll;
+  overflow-x: scroll;
+`
+const MenuBox1 = styled.div`
+  flex: 1;
+  border: 1px solid #333;
+`
+const style = {
+  width: '110%',
+  height: '25px',
+  textAlign: 'center',
+  border: '1px solid #c5b4b4',
+  lineHeight: '25px',
+}
+
+let switch1 = true
+class SysPermission extends React.Component {
+  Caidan = (per) => {
+   return  (
+      <Menu>
+        <Menu.Item key="1">
+          <a onClick={() => this.updateState(3, per)}>添加下级目录</a>
+        </Menu.Item>
+        <Menu.Item key="2">
+          <a onClick={() => this.updateState(2, per)}>编辑菜单</a>
+        </Menu.Item>
+        <Menu.Item key="3">
+          <a onClick={() => this.deleteMenu(per)}>删除菜单</a>
+        </Menu.Item>
+      </Menu>
+    )
+  }
+
+  CaidanTwo = (
+    <Menu>
+      <Menu.Item key="1">
+        <a onClick={() => this.updateState(3)}>添加下级目录</a>
+      </Menu.Item>
+    </Menu>
+  )
+
   constructor(props) {
     super(props)
-    /**
-     *
-     * @type
-     * {
-     *  {
-     *    record: {};  当前变更的对象
-     *    columns: Array;  列表头部配置
-     *    dataSource: Array;  数据源
-     *    pagination: {  分页组件参数
-     *      showSizeChanger: boolean; 是否可以改变 pageSize
-     *      showQuickJumper: boolean; 是否可以快速跳转至某页
-     *      pageSizeOptions: [string , string , string , string]; 指定每页可以显示多少条
-     *      defaultPageSize: number 默认的每页条数
-     *    };
-     *    params: { 后端交互参数集合
-     *      pagination: {}; 分页参数
-     *      filters: {}; 查询参数
-     *      sorter: {} 排序参数
-     *    };
-     *    screenItem: {}; 搜索框参数
-     *    loading: boolean; 加载等待
-     *    open: boolean Modal打开组件
-     *   }
-     * }
-     */
     this.state = {
-      record: {},
-      columns: [],
-      dataSource: [],
-      pagination: {
-        showSizeChanger: true,
-        showQuickJumper: true,
-        pageSizeOptions: ['10', '15', '30', '45'],
-        defaultPageSize: 10,
-      },
-      params: {
-        pagination: {},
-        filters: {
-          name: '',
-        },
-        sorter: {},
-      },
-      screenItem: {
-        name: '',
-      },
-      loading: false,
-      open: false,
+      perInfo: {},
+      PerList: [],
+      id: 0,
+      state: 1, // 1详情 2编辑 3添加
     }
   }
-  componentDidMount = async () => {
-    this.columnsUp()
-    this.fetch({ pagination: {}, filters: {} })
+
+  componentDidMount() {
+    this.initialization()
   }
 
-  /**
-   * 更新搜索框
-   * @param e
-   */
-  onChangeCustomerName = (e) => {
-    const screenItemOne = this.state.screenItem
-    screenItemOne.name = e.target.value
+  deleteMenu = async ( per ) => {
+    const data = await postRequest('/system/updatePer', {
+      id: per.id,
+      delFlag: 1,
+    })
+    message.success(data.message)
+    if (data.code === 0) {
+      this.initialization()
+    }
+  }
+
+  updateState = (value, per) => {
+    switch1 = false
+    let perInfo = per
     this.setState({
-      screenItem: screenItemOne,
+      perInfo,
+    })
+    if (value === 2) {
+      this.setState({
+        state: value,
+      })
+      this.props.form.setFieldsValue({
+        perName: perInfo.perName,
+        permissionCode: perInfo.permissionCode,
+        perType: perInfo.perType,
+        perUrl: perInfo.perUrl,
+        perImg: perInfo.perImg,
+        sort: perInfo.sort,
+        parentName: perInfo.parentName,
+      })
+    } else {
+      this.props.form.resetFields()
+      this.setState({
+        state: value,
+      })
+      this.props.form.setFieldsValue({
+        parentName: perInfo.perName,
+      })
+    }
+  }
+
+  handleButtonClick = id => {
+    this.setState({
+      id,
     })
   }
 
-  /**
-   * 添加编辑后回调刷新
-   * @param json
-   */
-  getContractInfo = (json) => {
-    if (json.type === 'submit' && !this.state.record.id) {
-      const filters = JSON.parse(JSON.stringify(this.state.params.filters))
-      for (const key in filters) {
-        if (filters[key] !== null) {
-          filters[key] = null
-        }
+  initialization = async () => {
+    switch1 = true
+    let PerList = await postRequest('/system/perListAll')
+    PerList = PerList.data
+    this.setState({
+      state: 1, // 1详情 2编辑 3添加
+      PerList,
+    })
+  }
+
+  info = perInfo => {
+    if (switch1) {
+      this.setState({
+        state: 1,
+      })
+      this.props.form.setFieldsValue({
+        perName: perInfo.perName,
+        permissionCode: perInfo.permissionCode,
+        perType: perInfo.perType,
+        perUrl: perInfo.perUrl,
+        perImg: perInfo.perImg,
+        sort: perInfo.sort,
+        parentName: perInfo.parentName,
+      })
+    }
+  }
+
+  Preservation = async () => {
+    let adopt = false
+    this.props.form.validateFields(err => {
+      if (err) {
+        adopt = false
+      } else {
+        adopt = true
       }
-      this.handleTableChange({},
-                             filters, {})
-    } else if (json.type === 'submit' && this.state.record.id > 0) {
-      this.handleTableChange(this.state.params.pagination,
-                             this.state.params.filters, this.state.params.sorter)
-    }
-    this.setState({
-      open: false,
-      record: {},
     })
-  }
-  /**
-   * 更新表头
-   * @returns {*}
-   */
-  columnsUp = () => {
-    const that = this
-    that.setState({
-      columns: [
-        {
-          title: '权限名',
-          width: 200,
-          dataIndex: 'name',
-        },
-        {
-          title: '权限标识',
-          width: 200,
-          dataIndex: 'permission',
-        },
-        {
-          title: '创建时间',
-          width: 200,
-          dataIndex: 'createTime',
-        },
-        {
-          title: '操作',
-          width: 200,
-          dataIndex: 'opt',
-          render(text, record) {
-            return (
-              <div>
-                <a onClick={() => that.edit(record)}>编辑</a>
-                <Popconfirm title="确定删除吗?" onConfirm={() => that.delete(record.id)}>
-                  <a style={{marginLeft: '20px'}}>删除</a>
-                </Popconfirm>
-              </div>
-            )
-          },
-        },
-      ],
-    })
-  }
-  /**
-   * 编辑
-   * @param record 编辑的对象
-   * @returns {Promise<void>}
-   */
-  edit = async (record) => {
-    this.setState({
-      open: true,
-      record,
-    })
-  }
-  /**
-   * @param id 删除的id
-   * @returns {Promise<void>}
-   */
-  delete = async (id) => {
-    const data = await deleteRequest('/api-user/permissions/' + id)
-    this.getContractInfo({type: 'submit'})
-    message.success(data.resp_msg)
-  }
-
-  /**
-   * 点击搜索执行 跳转第一页
-   */
-  handleSearch = () => {
-    const paramsOne = this.state.params
-    paramsOne.filters = Object.assign(paramsOne.filters, this.state.screenItem)
-    this.handleTableChange({},
-                           paramsOne.filters, paramsOne.sorter)
-  }
-  /**
-   * 分页触发
-   * @param pagination
-   * @param filters
-   * @param sorter
-   */
-  handleTableChange = (pagination, filters, sorter) => {
-    const pager = { ...this.state.pagination }
-    pager.current = pagination.current
-    const params = {
-      pagination,
-      sorter,
-      filters: Object.assign(this.state.params.filters, filters),
-    }
-    this.setState({
-      pagination: pager,
-      params,
-    })
-    this.columnsUp()
-    this.fetch({ pagination: Object.assign(params.pagination,
-                                           { field: sorter.field, order: sorter.order }),
-      filters: params.filters })
-  }
-  /**
-   * 请求数据
-   * @param params
-   * @returns {Promise.<void>}
-   */
-  fetch = async (params) => {
-    const paramsOne = JSON.parse(JSON.stringify(params))
-    if (paramsOne.pagination.field === null
-      || typeof paramsOne.pagination.field === 'undefined' || paramsOne.pagination.field === '') {
-      paramsOne.pagination.field = 'a.id'
-      paramsOne.pagination.order = 'desc'
-    }
-    if (paramsOne.pagination.current === null
-      || typeof paramsOne.pagination.current === 'undefined' || paramsOne.pagination.current === '') {
-      paramsOne.pagination.current = 0
-      paramsOne.pagination.pageSize = 10
-    }
-    this.setState({ loading: true })
-    const data = await getRequest('/api-user/permissions?page='
-      + paramsOne.pagination.current + '&limit=' + paramsOne.pagination.pageSize)
-    const paginationOne = this.state.pagination
-    paginationOne.total = data.count
-    this.setState({
-      loading: false,
-      dataSource: data.data,
-      pagination: paginationOne,
-    })
-  }
-  /**
-   * 筛选标签回调
-   * @param filters
-   */
-  callbackScreen = (filters) => {
-    const screenItemOne = JSON.parse(JSON.stringify(this.state.screenItem))
-    for (const key in filters) {
-      if (key !== null) {
-        for (const keyTwo in screenItemOne) {
-          if (key.toString() === keyTwo.toString()) {
-            screenItemOne[keyTwo] = filters[key]
+    if (adopt) {
+      let json = this.props.form.getFieldsValue()
+      let i = 0
+      if (this.state.state === 3) {
+        json.parentId = this.state.id
+        const data = await postRequest('/system/insertPer', json)
+        i = data.code
+        message.success(data.message)
+      } else if (this.state.state === 2) {
+        json.id = this.state.id
+        this.state.PerList.forEach(per => {
+          if (per.id === this.state.id) {
+            json = Object.assign(per, json)
           }
-        }
+        })
+        const data = await postRequest('/system/updatePer', json)
+        i = data.code
+        message.success(data.message)
+      }
+      if (i === 0) {
+        this.initialization()
       }
     }
-    this.setState({
-      screenItem: screenItemOne,
-    })
-    this.handleTableChange(this.state.params.pagination, filters, this.state.params.sorter)
-    this.columnsUp()
   }
-  /**
-   * 添加事件
-   */
-  addCustomer = () => {
-    this.setState({
-      open: true,
+
+  recursion(PerList, i) {
+    const arr = []
+    let j = 0
+    PerList.forEach(per => {
+      if (per.parentId === i) {
+        arr[j] = (
+          <Tree.TreeNode
+            title={
+              <div style={style} onClick={() => this.info(per)}>
+                <Icon
+                  type={per.perType === 2 ? 'tag' : per.perType === 3 ? 'pushpin-o' : 'appstore'}
+                />
+                &nbsp;&nbsp;
+                {per.perName}
+                &nbsp;&nbsp;
+                <Dropdown trigger={['click']} overlay={this.Caidan(per)} placement="bottomLeft">
+                  <Icon onClick={this.handleButtonClick.bind(this, per.id)} type="caret-down" />
+                </Dropdown>
+              </div>
+            }
+            key={per.id}
+          >
+            {this.recursion(per.children, per.id)}
+          </Tree.TreeNode>
+        )
+        j += 1
+      }
     })
+    return arr
   }
+
   render() {
-    const that = this
+    const { getFieldDecorator } = this.props.form
     return (
       <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
-        <div>
-          <Input prefix={<Icon type="search" />}
-                 placeholder="搜索权限名"
-                 style={{ width: 280, marginLeft: '10px' }}
-                 value={this.state.screenItem.name}
-                 onChange={this.onChangeCustomerName}
-                 onPressEnter={this.handleSearch}
-          />
-          <Button style={{ margin: '0 10px' }} type="primary" onClick={this.handleSearch}>搜索</Button>
-          <Modal
-            title={this.state.record.id > 0 ? '编辑权限' : '添加权限'}
-            style={{ top: 20 }}
-            width={500}
-            visible={this.state.open}
-            footer={null}
-            onCancel={() => this.getContractInfo({ type: 'cancel' })}
-            destroyOnClose={true}
-          >
-            <AddUp
-              callback={this.getContractInfo}
-              record={this.state.record}
+        <MenuContent>
+          <MenuBox>
+            <Tree showLine={true} defaultExpandAll={true}>
+              <Tree.TreeNode
+                title={
+                  <div style={style}>
+                    <Icon type="folder" />
+                    &nbsp;&nbsp;菜单结构&nbsp;&nbsp;
+                    <Dropdown trigger={['click']} overlay={this.CaidanTwo} placement="bottomLeft">
+                      <Icon onClick={this.handleButtonClick.bind(this, 0)} type="caret-down" />
+                    </Dropdown>
+                  </div>
+                }
+                key="0-0"
+              >
+                {this.recursion(this.state.PerList, 0)}
+              </Tree.TreeNode>
+            </Tree>
+          </MenuBox>
+          <MenuBox1>
+            <h2
+              style={{
+                marginLeft: '7%',
+                fontWeight: 600,
+              }}
+            >
+              {this.state.state === 1
+                ? '权限详情'
+                : this.state.state === 2
+                  ? '编辑权限'
+                  : '添加权限'}
+            </h2>
+            <hr
+              style={{
+                color: '#EBEBEB',
+                width: '90%',
+                marginLeft: '5%',
+              }}
             />
-          </Modal>
-          <div style={{ float: 'right', display: 'inline-block', cursor: 'pointer' }} onClick={this.addCustomer}>
-            <Button type="primary" style={{padding: '0 15px'}}>+ 添加权限</Button>
-          </div>
-        </div>
-        <Screen
-          callback={this.callbackScreen}
-          columns={this.state.columns}
-          filters={this.state.params.filters}
-        />
-        <Table
-          style={{ marginTop: '20px' }}
-          rowKey="id"
-          scroll={{ x: 1500  }}
-          columns={this.state.columns}
-          dataSource={this.state.dataSource}
-          pagination={this.state.pagination}
-          loading={this.state.loading}
-          onChange={this.handleTableChange}
-        />
+            <Form style={{ marginTop: 20 }} layout="horizontal">
+              <FormItem label="权限名称" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+                {getFieldDecorator('perName', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入权限名称!',
+                    },
+                  ],
+                })(<Input disabled={this.state.state === 1} placeholder="请输入权限名称" />)}
+              </FormItem>
+              <FormItem label="权限标识" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+                {getFieldDecorator('permissionCode', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入权限标识!',
+                    },
+                  ],
+                })(<Input disabled={this.state.state === 1} placeholder="请输入权限标识" />)}
+              </FormItem>
+              <FormItem label="权限级别" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+                {getFieldDecorator('perType', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择权限级别!',
+                    },
+                  ],
+                })(
+                  <RadioGroup disabled={this.state.state === 1}>
+                    <Radio value={1}>目录</Radio>
+                    <Radio value={2}>页面</Radio>
+                    <Radio value={3}>按钮</Radio>
+                  </RadioGroup>
+                )}
+              </FormItem>
+              <FormItem label="权限地址" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+                {getFieldDecorator('perUrl')(
+                  <Input disabled={this.state.state === 1} placeholder="请输入权限地址" />
+                )}
+              </FormItem>
+              <FormItem label="图标" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+                {getFieldDecorator('perImg')(<Input disabled={this.state.state === 1} />)}
+              </FormItem>
+              <FormItem label="排列顺序" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+                {getFieldDecorator('sort')(<Input disabled={this.state.state === 1} />)}
+              </FormItem>
+              <FormItem label="父级菜单" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+                {getFieldDecorator('parentName')(<Input disabled={true} />)}
+              </FormItem>
+              {this.state.state !== 1 && (
+                <div>
+                  <Button
+                    onClick={() => {
+                      switch1 = true
+                      this.info(this.state.perInfo)
+                    }}
+                    type="primary"
+                    style={{ marginLeft: '25%' }}
+                  >
+                    取消
+                  </Button>
+                  <Button onClick={this.Preservation} type="primary" style={{ marginLeft: '25%' }}>
+                    保存
+                  </Button>
+                </div>
+              )}
+            </Form>
+          </MenuBox1>
+        </MenuContent>
       </div>
     )
   }
 }
+const SysPermissionCom = Form.create()(SysPermission)
 
-export default Index
+export default SysPermissionCom
