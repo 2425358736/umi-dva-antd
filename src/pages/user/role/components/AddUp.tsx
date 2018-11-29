@@ -1,24 +1,19 @@
-// 添加和修改组件
 import React from 'react'
-import { Button, Input, Form, message } from 'antd'
-import { postRequest } from '../../../../utils/api'
+import { Select, Radio, Button, Input, Form, message } from 'antd'
 const styles = require('../index.less')
+import { postRequest } from '../../../../utils/api'
 
 const FormItem = Form.Item
+const SelectOption = Select.Option
+const RadioButton = Radio.Button
+const RadioGroup = Radio.Group
 class AddUp extends React.Component {
   constructor(props) {
     super(props)
-    /**
-     *
-     * @type
-     * {
-     *  {
-     *    buttonLoading: boolean 按钮加载中 防止重复提交
-     *   }
-     * }
-     */
     this.state = {
+      roles: [],
       buttonLoading: false,
+      department: [],
     }
   }
 
@@ -26,121 +21,190 @@ class AddUp extends React.Component {
     this.initialization()
   }
 
-  /**
-   * 初始化方法
-   * @returns {Promise<void>}
-   */
   initialization = async () => {
+    const departmentList = await postRequest('/system/departmentListAll')
+
+    this.setState({
+      department: departmentList.data,
+    })
     this.props.form.resetFields()
-    if (this.props.record.id > 0) {
+    if (this.props.id > 0) {
+      let user = await postRequest('/system/getUser', { id: this.props.id })
+      user = user.data
+      const RoleList = await postRequest('/system/roleListDepartment', {
+        departmentId: user.departmentId,
+      })
+      this.setState({
+        roles: RoleList.data,
+      })
       this.props.form.setFieldsValue({
-        name: this.props.record.name,
-        code: this.props.record.code,
+        departmentId: user.departmentId.toString(),
+        jobNum: user.jobNum,
+        loginName: user.loginName,
+        phone: user.phone,
+        roleId: user.roleId,
+        remarks: user.remarks,
       })
     }
   }
 
-  /**
-   * 表单提交方法
-   * @returns {Promise<void>}
-   */
-  handleSubmit = async () => {
-      let adopt = false
-      this.props.form.validateFields(
-        (err) => {
-          if (err) {
-            adopt = false
-          } else {
-            adopt = true
-          }
-        },
-      )
-      if (adopt) {
-        this.setState({
-          buttonLoading: true,
-        })
-        const json = this.props.form.getFieldsValue()
-        let data
-        if (this.props.record.id > 0) {
-          json.id = this.props.record.id
-          data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
-            json
-          )
-        } else {
-          data = await postRequest(
-            '/api-user/roles/saveOrUpdate',
-            json
-          )
-        }
-        if (data.resp_code === 0) {
-          this.props.callback({ type: 'submit' })
-        }
-        message.success(`${data.resp_msg}`)
-        this.setState({
-          buttonLoading: false,
-        })
-      }
-    }
+  departmentId = async value => {
+    const RoleList = await postRequest('/system/roleListDepartment', { departmentId: value })
+    this.setState({
+      roles: RoleList.data,
+    })
+  }
 
-  /**
-   * 取消方法
-   */
+  handleSubmit = async () => {
+    let adopt = false
+    this.props.form.validateFields(err => {
+      if (err) {
+        adopt = false
+      } else {
+        adopt = true
+      }
+    })
+    if (adopt) {
+      this.setState({
+        buttonLoading: true,
+      })
+      const json = this.props.form.getFieldsValue()
+      let data
+      if (this.props.id > 0) {
+        json.id = this.props.id
+        data = await postRequest('/system/updateUser', json)
+        message.success(`${data.message}`)
+      } else {
+        data = await postRequest('/system/insertUser', json)
+        message.success(`${data.message}`)
+      }
+      if (data.code !== 140) {
+        this.props.callback({ type: 'submit' })
+      }
+      this.setState({
+        buttonLoading: false,
+      })
+    }
+  }
+
   handleCancel = () => {
     this.props.callback({ type: 'cancel' })
   }
+
+  confirm = (rule, value, callback) => {
+    const passWord = this.props.form.getFieldValue('passWord')
+    const passWordTwo = this.props.form.getFieldValue('passWordTwo')
+    if (passWord && passWordTwo && passWord !== passWordTwo) {
+      callback('两次密码输入不一致')
+    } else {
+      callback()
+    }
+  }
+
   render() {
-      const { getFieldDecorator } = this.props.form
-      return (
-        <div style={{ marginLeft: '10%', overflow: 'hidden' }} >
-          <Form layout="horizontal">
-            <FormItem
-              label="角色名"
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 15 }}
-            >
-              {getFieldDecorator('name', {
-                  rules: [{
-                    required: true,
-                    message: '请输入角色名',
-                  }],
-                })(
-
-                  <Input placeholder="请输入角色名" />
-                )}
-            </FormItem>
-            <FormItem
-              label="code"
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 15 }}
-            >
-              {getFieldDecorator('code', {
-                  rules: [{
-                    required: true,
-                    message: '请输入code',
-                  }],
-                })(
-
-                  <Input placeholder="请输入code" />
-                )}
-            </FormItem>
-          </Form>
-          <div style={{ float: 'right', marginRight: '8%', marginTop: 20 }}>
-            <Button
-              onClick={this.handleCancel}
-              style={{ backgroundColor: 'rgba(243, 243, 243, 1)', color: '#666666', marginRight: 20 }}
-            >取消
-            </Button>
-            <Button
-              loading={this.state.buttonLoading}
-              onClick={this.handleSubmit}
-              type="primary"
-              style={{ }}
-            >提交
-            </Button>
-          </div>
+    const { getFieldDecorator } = this.props.form
+    return (
+      <div style={{ marginLeft: '10%', overflow: 'hidden' }}>
+        <Form layout="horizontal">
+          <FormItem label="所属部门" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+            {getFieldDecorator('departmentId', {
+              rules: [
+                {
+                  required: true,
+                  message: '请选择所属部门',
+                },
+              ],
+            })(
+              <Select
+                showSearch={true}
+                placeholder="请选择所属部门"
+                optionFilterProp="children"
+                onChange={this.departmentId}
+              >
+                {this.state.department.map(d => {
+                  return <SelectOption key={d.id}>{d.departmentName}</SelectOption>
+                })}
+              </Select>
+            )}
+          </FormItem>
+          <FormItem label="工号" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+            {getFieldDecorator('jobNum', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入工号',
+                },
+              ],
+            })(<Input placeholder="请输入工号" />)}
+          </FormItem>
+          <FormItem label="用户名" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+            {getFieldDecorator('loginName', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入用户名',
+                },
+              ],
+            })(<Input placeholder="请请输入用户名" />)}
+          </FormItem>
+          <FormItem label="手机" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+            {getFieldDecorator('phone', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入手机',
+                },
+              ],
+            })(<Input placeholder="请输入手机" />)}
+          </FormItem>
+          <FormItem
+            label="所属角色"
+            labelCol={{ span: 5 }}
+            wrapperCol={{ span: 15 }}
+            className={styles.roleListDiv}
+          >
+            {getFieldDecorator('roleId', {
+              rules: [
+                {
+                  required: true,
+                  message: '请选择所属角色',
+                },
+              ],
+            })(
+              <RadioGroup>
+                {this.state.roles.map((role, i) => {
+                  const j = i
+                  return (
+                    <RadioButton key={j} value={role.id}>
+                      {role.roleName}
+                    </RadioButton>
+                  )
+                })}
+              </RadioGroup>
+            )}
+          </FormItem>
+          <FormItem label="备注" labelCol={{ span: 5 }} wrapperCol={{ span: 15 }}>
+            {getFieldDecorator('remark')(<Input type="textarea" rows={4} />)}
+          </FormItem>
+        </Form>
+        <div style={{ float: 'right', marginRight: '8%', marginTop: 20 }}>
+          <Button
+            onClick={this.handleCancel}
+            style={{ backgroundColor: 'rgba(243, 243, 243, 1)', color: '#666666', marginRight: 20 }}
+          >
+            取消
+          </Button>
+          <Button
+            loading={this.state.buttonLoading}
+            onClick={this.handleSubmit}
+            type="primary"
+            style={{}}
+          >
+            提交
+          </Button>
         </div>
-      )
+      </div>
+    )
   }
 }
 

@@ -60,7 +60,7 @@ export default {
         { path: '/wallet', component: 'wallet' },
         { path: '/gift', component: 'gift' },
         { path: '/heart', component: 'heart' },
-        { path: '/user/role', component: 'user/role' },
+        { path: '/user/role', component: 'user/sysDepartment' },
         { path: '/sysuser', component: 'user/user' },
         { path: '/mycompany', component: 'user/urisdiction' },
       ],

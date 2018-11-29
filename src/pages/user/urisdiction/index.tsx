@@ -1,8 +1,7 @@
 // 系统设置 - 菜单管理
 import React from 'react'
-import { Tree, Button, Icon, Menu, Dropdown, Form, Input, Radio, message } from 'antd'
+import { Tree, Button, Icon, Divider, Menu, Dropdown, Form, Input, Radio, message } from 'antd'
 import styled from 'styled-components'
-import styles from '../../../components/Less/List.less'
 import { postRequest } from '../../../utils/api'
 
 const FormItem = Form.Item
@@ -14,15 +13,11 @@ const MenuContent = styled.div`
 `
 
 const MenuBox = styled.div`
-  flex: 1;
-  border: 1px solid #333;
+  flex: 0.5;
   word-wrap: break-word;
-  overflow-y: scroll;
-  overflow-x: scroll;
 `
 const MenuBox1 = styled.div`
   flex: 1;
-  border: 1px solid #333;
 `
 const style = {
   width: '110%',
@@ -85,7 +80,7 @@ class SysPermission extends React.Component {
 
   updateState = (value, per) => {
     switch1 = false
-    let perInfo = per
+    let perInfo = per ? per : {}
     this.setState({
       perInfo,
     })
@@ -108,7 +103,7 @@ class SysPermission extends React.Component {
         state: value,
       })
       this.props.form.setFieldsValue({
-        parentName: perInfo.perName,
+        parentName: perInfo.perName ? perInfo.perName : '菜单结构',
       })
     }
   }
@@ -214,7 +209,7 @@ class SysPermission extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form
     return (
-      <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
+      <div>
         <MenuContent>
           <MenuBox>
             <Tree showLine={true} defaultExpandAll={true}>
@@ -234,6 +229,7 @@ class SysPermission extends React.Component {
               </Tree.TreeNode>
             </Tree>
           </MenuBox>
+          <Divider type="vertical" style={{ height: '38em' }} />
           <MenuBox1>
             <h2
               style={{
