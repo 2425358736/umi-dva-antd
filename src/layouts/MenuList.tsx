@@ -1,6 +1,5 @@
 import React from 'react'
 import { Menu, Icon } from 'antd'
-import MenuJson from './MenuJson'
 import Link from 'umi/link'
 import { postRequest } from 'utils/api'
 

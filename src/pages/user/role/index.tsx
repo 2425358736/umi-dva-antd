@@ -322,7 +322,7 @@ class Role extends React.Component {
           <Modal
             title={this.state.id > 0 ? '编辑角色' : '添加角色'}
             style={{ top: 20 }}
-            width={500}
+            width={700}
             visible={this.state.open}
             footer={null}
             onCancel={() => this.getContractInfo({ type: 'cancel' })}
