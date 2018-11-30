@@ -1,5 +1,6 @@
 import request from '../utils/request'
 import router from 'umi/router'
+import moment from 'moment'
 
 export const http: string = 'http://localhost:8081'
 
@@ -185,36 +186,4 @@ export function jsonString(json) {
 }
 function exportExcelGet(url, params) {
   window.open(`${http}/upload/excel?list=${params}`)
-}
-export function post(url, params, headers) {
-  return new Promise((resolve, reject) => {
-    request(http + url, {
-      method: 'POST',
-      body: {
-        ...params,
-      },
-    })
-      .then(response => {
-        const resultData = response
-        if (typeof resultData !== 'undefined') {
-          if (resultData.code === 120) {
-            const { dispatch } = store
-            dispatch(routerRedux.push('/user/login'))
-          } else if (resultData.code === 500) {
-            const { dispatch } = store
-            dispatch(routerRedux.push('/exception/500'))
-          } else if (resultData.code === 403) {
-            const { dispatch } = store
-            dispatch(routerRedux.push('/exception/403'))
-          } else {
-            resolve(resultData)
-          }
-        } else {
-          resolve(resultData)
-        }
-      })
-      .catch(error => {
-        reject(error)
-      })
-  })
 }

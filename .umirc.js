@@ -53,6 +53,7 @@ export default {
         { path: '/user/role', component: 'user/sysDepartment' },
         { path: '/sysuser', component: 'user/user' },
         { path: '/mycompany', component: 'user/urisdiction' },
+        { path: '/map001', component: 'map/map001' },
       ],
     },
   ],
