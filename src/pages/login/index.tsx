@@ -19,7 +19,7 @@ class LoginPage extends Component {
   handleSubmit = async (err, values) => {
     if (!err) {
       const data = await postRequest(
-        '/system/verificationUser',
+        '/login2',
         values
       )
       if (data.code === 0) {

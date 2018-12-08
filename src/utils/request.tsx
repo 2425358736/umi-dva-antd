@@ -91,7 +91,7 @@ export default function request(url, options) {
         router.push('/error/404')
       }
       if (status === 'TypeError') {
-        router.push('/login')
+        window.location.href = '/login'
       }
     })
 }

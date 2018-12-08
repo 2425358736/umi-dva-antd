@@ -96,8 +96,9 @@ class MenuList extends React.Component<any, any> {
   render() {
     return (
       <Menu
-        mode="inline"
+        mode={this.props.mode ? this.props.mode : 'inline' }
         theme="dark"
+        style={this.props.mode ? { height: '100%', display: 'flex', alignItems: 'center' } : {} }
         selectedKeys={this.state.selectedKeys}
         openKeys={this.state.openKeys}
         onOpenChange = {this.onOpenChange}
