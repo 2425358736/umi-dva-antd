@@ -3,7 +3,7 @@ export default {
 
   state: {
     data: {
-      layout: 1
+      layout: 0
     },
   },
 

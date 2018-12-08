@@ -47,6 +47,8 @@ class Root extends React.Component<Props, {}> {
             trigger={null}
             collapsible={true}
             collapsed={this.state.collapsed}
+            width={256}
+            breakpoint="lg"
           >
               <a><div className={styles.logo} onClick={() => {router.push('/')}} /></a>
             <MenuList />
@@ -63,16 +65,16 @@ class Root extends React.Component<Props, {}> {
               padding: 24, background: '#fff', minHeight: 280, overflowX: 'hidden' }}>
               {this.props.children}
             </Content>
-            <Affix offsetTop={120} onChange={affixed => console.log(affixed)}>
-              <Button onClick={() => {
-                const { dispatch } = this.props
-                dispatch({
-                  type: 'globalVariable/updateType',
-                  payload: {layout: this.props.layout === 0 ? 1 : 0},
-                })
-                }
-              }>120px to affix top</Button>
-            </Affix>
+            {/*<Affix offsetTop={120} onChange={affixed => console.log(affixed)}>*/}
+              {/*<Button onClick={() => {*/}
+                {/*const { dispatch } = this.props*/}
+                {/*dispatch({*/}
+                  {/*type: 'globalVariable/updateType',*/}
+                  {/*payload: {layout: this.props.layout === 0 ? 1 : 0},*/}
+                {/*})*/}
+                {/*}*/}
+              {/*}>120px to affix top</Button>*/}
+            {/*</Affix>*/}
           </Layout>
         </Layout>
       </LocaleProvider>

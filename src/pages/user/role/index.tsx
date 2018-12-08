@@ -187,7 +187,7 @@ class Role extends React.Component {
 
   deleteDepartment = async id => {
     switch1 = false
-    const data = await postRequest('/system/deleteSysUser', { id })
+    const data = await postRequest('/system/deleteRole', { id })
     await this.setState({
       id,
     })
@@ -298,7 +298,7 @@ class Role extends React.Component {
   render() {
     const that = this
     return (
-      <div className={styles.sysUserWrap} style={{ minHeight: 'calc(100vh - 104px)' }}>
+      <div className={styles.sysUserWrap}>
         <div>
           <Button
             onClick={() => {
@@ -357,18 +357,18 @@ class Role extends React.Component {
           loading={this.state.loading}
           onChange={this.handleTableChange}
           onRow={record => {
-            return {
-              onClick: async () => {
-                if (switch1) {
-                  await that.setState({
-                    id: record.id,
-                  })
-                  this.setState({
-                    openInfo: true,
-                  })
-                }
-              },
-            }
+          //   return {
+          //     onClick: async () => {
+          //       if (switch1) {
+          //         await that.setState({
+          //           id: record.id,
+          //         })
+          //         this.setState({
+          //           openInfo: true,
+          //         })
+          //       }
+          //     },
+          //   }
           }}
         />
         <Drawer
