@@ -1,3 +1,1 @@
-# admin 管理后台
-
-> 请注意 配置 vscode 的 tslint 插件
+![image](https://yun-cunchu.oss-cn-beijing.aliyuncs.com/images/QQ%E5%9B%BE%E7%89%8720181214133531.png)![image](https://yun-cunchu.oss-cn-beijing.aliyuncs.com/images/QQ%E5%9B%BE%E7%89%8720181214133601.png)![image](https://yun-cunchu.oss-cn-beijing.aliyuncs.com/images/QQ%E5%9B%BE%E7%89%8720181214133649.png)![image](https://yun-cunchu.oss-cn-beijing.aliyuncs.com/images/QQ%E5%9B%BE%E7%89%8720181214133723.png)![image](https://yun-cunchu.oss-cn-beijing.aliyuncs.com/images/QQ%E5%9B%BE%E7%89%8720181214133741.png)![image](https://yun-cunchu.oss-cn-beijing.aliyuncs.com/images/QQ%E5%9B%BE%E7%89%8720181214133823.png)
