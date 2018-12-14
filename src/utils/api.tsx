@@ -2,7 +2,7 @@ import request from '../utils/request'
 import router from 'umi/router'
 import moment from 'moment'
 
-export const http: string = 'http://localhost:8081'
+export const http: string = 'http://123.206.19.217:8081'
 
 export function getRequest(url) {
   return new Promise((resolve, reject) => {
