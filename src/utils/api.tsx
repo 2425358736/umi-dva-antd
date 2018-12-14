@@ -138,7 +138,7 @@ export async function exportExcel(url, params, list) {
     arr.push(json2)
   })
   paramsOne.export = arr
-  await post(url, paramsOne)
+  await postRequest(url, paramsOne)
   window.location.href = `${http}/upload/excel`
 }
 /* eslint-disable */
