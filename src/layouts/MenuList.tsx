@@ -19,7 +19,7 @@ class MenuList extends React.Component<any, any> {
   componentDidMount = async () => {
     let list = []
     const key = []
-    const perList = await postRequest('/system/perList')
+    const perList = await postRequest('/system/listPermission')
     const arr = JSON.parse(JSON.stringify(perList.data))
     this.lookup(arr, list, key)
     if (key.length === 0) {
